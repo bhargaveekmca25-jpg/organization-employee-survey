@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Survey Form Analysis System</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: linear-gradient(135deg, #0f172a, #1d4ed8);
+            color: white;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: white;
+            color: #1d4ed8;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo-text h1 {
+            font-size: 23px;
+            margin-bottom: 4px;
+        }
+
+        .logo-text p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .admin-link {
+            text-decoration: none;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.5);
+            padding: 10px 17px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .admin-link:hover {
+            background: white;
+            color: #1d4ed8;
+        }
+
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 510px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            background:
+                linear-gradient(
+                    rgba(15,23,42,0.92),
+                    rgba(29,78,216,0.88)
+                );
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 850px;
+        }
+
+        .hero-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .hero h2 {
+            font-size: 42px;
+            margin-bottom: 18px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.7;
+            max-width: 700px;
+            margin: auto;
+            opacity: 0.92;
+        }
+
+        .start-btn {
+            display: inline-block;
+            margin-top: 30px;
+            background: white;
+            color: #1d4ed8;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 9px;
+            font-size: 17px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+
+        /* ================= INFORMATION ================= */
+
+        .section {
+            max-width: 1150px;
+            margin: 55px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #64748b;
+        }
+
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px 24px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.07);
+            border-top: 4px solid #2563eb;
+        }
+
+        .card-icon {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+
+        /* ================= HOW IT WORKS ================= */
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .step {
+            background: white;
+            padding: 25px 18px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .step-number {
+            width: 42px;
+            height: 42px;
+            margin: auto auto 12px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step h3 {
+            font-size: 16px;
+            color: #1e3a8a;
+            margin-bottom: 7px;
+        }
+
+        .step p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #0f172a;
+            color: #cbd5e1;
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+            font-size: 13px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero h2 {
+                font-size: 34px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .header {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .hero {
+                min-height: 450px;
+            }
+
+            .hero h2 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+    <div class="logo-area">
+
+        <div class="logo">
+            📊
+        </div>
+
+        <div class="logo-text">
+
+            <h1>Survey Analysis System</h1>
+
+            <p>Employee Feedback & Analysis Platform</p>
+
+        </div>
+
+    </div>
+
+
+    <a href="/admin" class="admin-link">
+        🛡️ Admin Dashboard
+    </a>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-icon">
+            📝
+        </div>
+
+        <h2>
+            Employee Feedback Survey
+        </h2>
+
+        <p>
+            Share your valuable feedback about your organization.
+            Your responses help organizations understand employee
+            satisfaction, workplace environment and areas for improvement.
+        </p>
+
+        <a href="/survey" class="start-btn">
+            Start Survey →
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>
+            About the System
+        </h2>
+
+        <p>
+            A simple and efficient platform for collecting and analysing employee feedback.
+        </p>
+
+    </div>
+
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-icon">
+                📝
+            </div>
+
+            <h3>
+                Employee Survey
+            </h3>
+
+            <p>
+                Employees can provide feedback about satisfaction,
+                communication, management, teamwork and other workplace factors.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🗄️
+            </div>
+
+            <h3>
+                Secure Data Storage
+            </h3>
+
+            <p>
+                Survey responses are stored in an SQLite database
+                using SQL operations through the Flask backend.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                📊
+            </div>
+
+            <h3>
+                Analysis & Reports
+            </h3>
+
+            <p>
+                Stored responses are analysed using Python and
+                displayed through charts, percentages and summaries.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>
+            How It Works
+        </h2>
+
+        <p>
+            Simple four-step survey and analysis process
+        </p>
+
+    </div>
+
+
+    <div class="steps">
+
+        <div class="step">
+
+            <div class="step-number">
+                1
+            </div>
+
+            <h3>
+                Fill Survey
+            </h3>
+
+            <p>
+                Employee completes the feedback form.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-number">
+                2
+            </div>
+
+            <h3>
+                Store Data
+            </h3>
+
+            <p>
+                Responses are stored in SQLite database.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-number">
+                3
+            </div>
+
+            <h3>
+                Analyse
+            </h3>
+
+            <p>
+                Python calculates response statistics.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-number">
+                4
+            </div>
+
+            <h3>
+                View Reports
+            </h3>
+
+            <p>
+                Admin views charts and survey results.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    © 2026 Survey Form Analysis System |
+    Employee Feedback & Analysis Platform
+
+</footer>
+
+
+</body>
+
+</html>
