@@ -1,32 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Employee Survey System</title>
+    <title>Survey Analysis System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f6f9; margin:0; }
-        .header { background: linear-gradient(135deg, #0f1b4d, #1e3c9c); color:white; padding:40px; text-align:center; }
-        .header h1 { margin:0; font-size:32px; }
-        .header p { opacity:0.9; margin-top:8px; font-size:16px; }
-        .container { max-width: 800px; margin: 30px auto; background: white; padding:30px; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align:center; }
-        .btn { display:inline-block; padding:12px 25px; margin:10px; border-radius:5px; text-decoration:none; color:white; font-weight:bold; }
-        .btn-primary { background:#007bff; }
-        .btn-success { background:#28a745; }
-        .btn:hover { opacity:0.9; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background: #f1f5f9; }
+        /* Top Navbar */
+        .navbar { background: linear-gradient(90deg, #0a1931, #1e4bd8); color:white; padding:12px 25px; display:flex; justify-content:space-between; align-items:center; }
+        .navbar .logo { display:flex; align-items:center; gap:8px; font-weight:bold; font-size:14px; }
+        .navbar .logo span { font-size:10px; display:block; opacity:0.8; font-weight:normal; }
+        .admin-btn { background: rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); color:white; padding:6px 14px; border-radius:6px; text-decoration:none; font-size:12px; }
+
+        /* Hero */
+        .hero { background: linear-gradient(180deg, #0a1931 0%, #1e3a8a 50%, #3b6ef5 100%); color:white; text-align:center; padding:60px 20px 70px 20px; }
+        .hero .icon { font-size:35px; background:white; width:50px; height:50px; line-height:50px; border-radius:8px; margin:0 auto 15px auto; }
+        .hero h1 { font-size:26px; margin-bottom:12px; }
+        .hero p { max-width:550px; margin:0 auto; opacity:0.85; font-size:12px; line-height:18px; }
+        .start-btn { display:inline-block; background:white; color:#1e3a8a; padding:8px 18px; border-radius:6px; text-decoration:none; font-weight:bold; font-size:13px; margin-top:20px; }
+
+        /* Sections */
+        .section { max-width: 1000px; margin: 40px auto; padding: 0 20px; text-align:center; }
+        .section h2 { font-size:20px; margin-bottom:5px; }
+        .section .sub { font-size:11px; color:#64748b; margin-bottom:20px; }
+
+        /* Cards */
+        .cards { display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; }
+        .card { background:white; border-radius:8px; padding:20px 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top:3px solid #3b82f6; }
+        .card .c-icon { font-size:22px; margin-bottom:10px; }
+        .card h3 { font-size:13px; color:#1e40af; margin-bottom:8px; }
+        .card p { font-size:11px; color:#64748b; line-height:16px; }
+
+        .steps { display:grid; grid-template-columns: repeat(4, 1fr); gap:15px; margin-top:10px; }
+        .step { background:white; border-radius:8px; padding:18px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .step .num { width:26px; height:26px; background:#2563eb; color:white; border-radius:50%; line-height:26px; margin:0 auto 10px auto; font-size:12px; font-weight:bold; }
+        .step h4 { font-size:11px; color:#1e40af; margin-bottom:6px; }
+        .step p { font-size:10px; color:#64748b; }
+
+        /* Footer */
+        .footer { background:#0f172a; color:#94a3b8; text-align:center; padding:15px; font-size:10px; margin-top:50px; }
+
+        @media(max-width:700px){ .cards, .steps { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🚀 Organization Employee Survey</h1>
-        <p>Employee Feedback & Analysis System</p>
+
+    <div class="navbar">
+        <div class="logo">
+            <div>📄</div>
+            <div>Survey Analysis System <span>Employee Feedback & Analysis Platform</span></div>
+        </div>
+        <a href="/admin" class="admin-btn">📊 Admin Dashboard</a>
     </div>
-    <div class="container">
-        <h2>Welcome to Employee Feedback Portal</h2>
-        <p>This system collects anonymous feedback for any organization. Your responses help improve workplace culture.</p>
-        <div style="margin-top:25px;">
-            <a href="/survey" class="btn btn-primary">Take Survey</a>
-            <a href="/admin" class="btn btn-success">View Responses</a>
+
+    <div class="hero">
+        <div class="icon">📝</div>
+        <h1>Employee Feedback Survey</h1>
+        <p>Share your valuable feedback about your organization. Your responses help organizations understand employee satisfaction, workplace environment and areas for improvement.</p>
+        <a href="/survey" class="start-btn">Start Survey →</a>
+    </div>
+
+    <div class="section">
+        <h2>About the System</h2>
+        <p class="sub">A simple and efficient platform for collecting and analyzing employee feedback.</p>
+        <div class="cards">
+            <div class="card">
+                <div class="c-icon">📋</div>
+                <h3>Employee Survey</h3>
+                <p>Employees can provide feedback about satisfaction, communication, management, teamwork and other workplace factors.</p>
+            </div>
+            <div class="card">
+                <div class="c-icon">🗄️</div>
+                <h3>Secure Data Storage</h3>
+                <p>Survey responses are stored in an SQLite database using SQL operations through the Flask backend.</p>
+            </div>
+            <div class="card">
+                <div class="c-icon">📊</div>
+                <h3>Analysis & Reports</h3>
+                <p>Stored responses are analyzed using Python and displayed through charts, percentages and summaries.</p>
+            </div>
         </div>
     </div>
+
+    <div class="section">
+        <h2>How It Works</h2>
+        <p class="sub">Simple four-step survey and analysis process</p>
+        <div class="steps">
+            <div class="step"><div class="num">1</div><h4>Fill Survey</h4><p>Employee completes feedback form</p></div>
+            <div class="step"><div class="num">2</div><h4>Store Data</h4><p>Responses are stored in SQLite database</p></div>
+            <div class="step"><div class="num">3</div><h4>Analyse</h4><p>Python calculates response statistics</p></div>
+            <div class="step"><div class="num">4</div><h4>View Reports</h4><p>Admin views charts and survey results</p></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 Survey Form Analysis System | Employee Feedback & Analysis Platform
+    </div>
+
 </body>
 </html>
