@@ -39,7 +39,7 @@ def create_database():
 def insert_response(company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions):
     conn = get_connection(); cur = conn.cursor()
     if IS_POSTGRES:
-        cur.execute("INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
+        cur.execute("INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) VALUES (%s,%s,%s,%s,%s,%s)", (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
     else:
         cur.execute("INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
     conn.commit(); conn.close()
