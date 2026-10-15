@@ -2,19 +2,34 @@
 import os
 import sqlite3
 
+try:
+    import psycopg2
+    import psycopg2.extras
+except ImportError:
+    psycopg2 = None
+
+
 DATABASE_URL = os.environ.get("DATABASE_URL")
 UNIQUE_INDEX = "uq_responses_company_employee"
 
+IS_POSTGRES = bool(
+    DATABASE_URL
+    and DATABASE_URL.startswith(("postgres://", "postgresql://"))
+)
+
+if IS_POSTGRES and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 
 def get_db_connection():
-    if DATABASE_URL:
-        import psycopg2
-        conn = psycopg2.connect(DATABASE_URL)
-        return conn
-    else:
-        conn = sqlite3.connect("database.db")
-        conn.row_factory = sqlite3.Row
-        return conn
+    if IS_POSTGRES:
+        if psycopg2 is None:
+            raise RuntimeError("psycopg2 is required for PostgreSQL.")
+        return psycopg2.connect(DATABASE_URL)
+
+    conn = sqlite3.connect("database.db")
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 def create_database():
@@ -22,7 +37,7 @@ def create_database():
     cur = conn.cursor()
 
     try:
-        if DATABASE_URL:
+        if IS_POSTGRES:
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS responses (
                     id SERIAL PRIMARY KEY,
@@ -81,9 +96,6 @@ def create_database():
                     ADD COLUMN employee_id TEXT NOT NULL DEFAULT ''
                 """)
 
-        # Same company + same Employee ID = only one response.
-        # Company names are compared without case or outer spaces.
-        # Employee IDs are compared without case or outer spaces.
         cur.execute(f"""
             CREATE UNIQUE INDEX IF NOT EXISTS {UNIQUE_INDEX}
             ON responses (
@@ -114,51 +126,35 @@ def insert_response(data):
 
     if len(data) != 15:
         raise ValueError(
-            "Survey data must contain Employee ID after company name. "
-            "The app.py submit route must also be updated."
+            "Expected 15 survey fields, with employee_id after company_name."
         )
 
     data = list(data)
+    data[0] = " ".join(str(data[0] or "").split())
+    data[1] = " ".join(str(data[1] or "").split()).upper()
 
-    company_name = " ".join(str(data[0] or "").split())
-    employee_id = " ".join(str(data[1] or "").split()).upper()
-
-    if not company_name or not employee_id:
-        raise ValueError("Company Name and Employee ID are required.")
-
-    data[0] = company_name
-    data[1] = employee_id
+    if not data[0] or not data[1]:
+        raise ValueError("Company name and Employee ID are required.")
 
     conn = get_db_connection()
     cur = conn.cursor()
 
     try:
-        if DATABASE_URL:
-            cur.execute("""
-                INSERT INTO responses (
-                    company_name, employee_id, name, department,
-                    experience, job_satisfaction, work_environment,
-                    communication, management_support, training,
-                    career_growth, resources, teamwork, recommend,
-                    suggestions
-                )
-                VALUES (
-                    %s, %s, %s, %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s, %s, %s
-                )
-            """, tuple(data))
+        placeholders = (
+            "%s" if IS_POSTGRES else "?"
+        )
+        placeholders = ", ".join([placeholders] * 15)
 
-        else:
-            cur.execute("""
-                INSERT INTO responses (
-                    company_name, employee_id, name, department,
-                    experience, job_satisfaction, work_environment,
-                    communication, management_support, training,
-                    career_growth, resources, teamwork, recommend,
-                    suggestions
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, tuple(data))
+        cur.execute(f"""
+            INSERT INTO responses (
+                company_name, employee_id, name, department,
+                experience, job_satisfaction, work_environment,
+                communication, management_support, training,
+                career_growth, resources, teamwork, recommend,
+                suggestions
+            )
+            VALUES ({placeholders})
+        """, tuple(data))
 
         conn.commit()
         return True
@@ -166,56 +162,17 @@ def insert_response(data):
     except Exception as error:
         conn.rollback()
 
-        if DATABASE_URL:
-            # Only treat a violation of our duplicate-prevention
-            # index as a duplicate submission.
-            constraint_name = getattr(
+        if IS_POSTGRES:
+            constraint = getattr(
                 getattr(error, "diag", None),
                 "constraint_name",
                 None
             )
-
-            if constraint_name == UNIQUE_INDEX:
+            if constraint == UNIQUE_INDEX:
                 return False
-
         else:
             message = str(error).lower()
-
             if (
                 "unique constraint failed" in message
                 and UNIQUE_INDEX in message
             ):
-                return False
-
-        raise
-
-    finally:
-        cur.close()
-        conn.close()
-
-
-def get_all_responses():
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("SELECT * FROM responses")
-        return cur.fetchall()
-    finally:
-        cur.close()
-        conn.close()
-
-
-def delete_all_responses():
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("DELETE FROM responses")
-        conn.commit()
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        cur.close()
-        conn.close()
