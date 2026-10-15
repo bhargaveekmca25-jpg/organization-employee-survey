@@ -1,27 +1,33 @@
 import os
 import sqlite3
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+try:
+    import psycopg2
+    import psycopg2.extras
+except:
+    psycopg2 = None
 
-def get_db_connection():
-    # Render pe Postgres hai to psycopg2 use hoga
-    if DATABASE_URL:
-        import psycopg2
-        import psycopg2.extras
-        conn = psycopg2.connect(DATABASE_URL)
-        return conn
+DATABASE_URL = os.environ.get("DATABASE_URL")
+IS_POSTGRES = False
+if DATABASE_URL:
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    if DATABASE_URL.startswith("postgresql://"):
+        IS_POSTGRES = True
+
+def get_connection():
+    if IS_POSTGRES and psycopg2:
+        return psycopg2.connect(DATABASE_URL)
     else:
-        # Local pe SQLite
         conn = sqlite3.connect("database.db")
         conn.row_factory = sqlite3.Row
         return conn
 
 def create_database():
-    conn = get_db_connection()
+    conn = get_connection()
     cur = conn.cursor()
-    
-    if DATABASE_URL: # Postgres syntax
-        cur.execute('''
+    if IS_POSTGRES:
+        cur.execute("""
             CREATE TABLE IF NOT EXISTS responses (
                 id SERIAL PRIMARY KEY,
                 company_name TEXT,
@@ -39,9 +45,9 @@ def create_database():
                 recommend TEXT,
                 suggestions TEXT
             )
-        ''')
-    else: # SQLite syntax
-        cur.execute('''
+        """)
+    else:
+        cur.execute("""
             CREATE TABLE IF NOT EXISTS responses (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 company_name TEXT,
@@ -59,45 +65,44 @@ def create_database():
                 recommend TEXT,
                 suggestions TEXT
             )
-        ''')
+        """)
     conn.commit()
-    cur.close()
     conn.close()
 
-def insert_response(data):
-    conn = get_db_connection()
+def insert_response(company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions):
+    conn = get_connection()
     cur = conn.cursor()
-    if DATABASE_URL:
-        cur.execute('''
-            INSERT INTO responses 
-            (company_name, name, department, experience, job_satisfaction, work_environment, 
-             communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        ''', data)
+    if IS_POSTGRES:
+        cur.execute("""
+            INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions)
+            VALUES (%s,%s,%s,%s,%s,%s)
+        """, (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
     else:
-        cur.execute('''
-            INSERT INTO responses 
-            (company_name, name, department, experience, job_satisfaction, work_environment, 
-             communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', data)
+        cur.execute("""
+            INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        """, (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
     conn.commit()
-    cur.close()
     conn.close()
 
 def get_all_responses():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT * FROM responses')
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-    return rows
+    conn = get_connection()
+    if IS_POSTGRES and psycopg2:
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT * FROM responses ORDER BY id DESC")
+        rows = cur.fetchall()
+        conn.close()
+        return rows
+    else:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM responses ORDER BY id DESC")
+        rows = cur.fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
 
 def delete_all_responses():
-    conn = get_db_connection()
+    conn = get_connection()
     cur = conn.cursor()
-    cur.execute('DELETE FROM responses')
+    cur.execute("DELETE FROM responses")
     conn.commit()
-    cur.close()
     conn.close()
