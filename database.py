@@ -1,6 +1,5 @@
 import os
 import sqlite3
-
 try:
     import psycopg2
     import psycopg2.extras
@@ -9,11 +8,10 @@ except:
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 IS_POSTGRES = False
-if DATABASE_URL:
+if DATABASE_URL and DATABASE_URL.startswith(("postgres://","postgresql://")):
     if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-    if DATABASE_URL.startswith("postgresql://"):
-        IS_POSTGRES = True
+        DATABASE_URL = DATABASE_URL.replace("postgres://","postgresql://",1)
+    IS_POSTGRES = True
 
 def get_connection():
     if IS_POSTGRES and psycopg2:
@@ -24,61 +22,38 @@ def get_connection():
         return conn
 
 def create_database():
-    conn = get_connection()
-    cur = conn.cursor()
-    if IS_POSTGRES:
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS responses (
-                id SERIAL PRIMARY KEY,
-                company_name TEXT, name TEXT, department TEXT,
-                experience TEXT, job_satisfaction TEXT, work_environment TEXT,
-                communication TEXT, management_support TEXT, training TEXT,
-                career_growth TEXT, resources TEXT, teamwork TEXT,
-                recommend TEXT, suggestions TEXT
-            )
-        """)
-    else:
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS responses (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                company_name TEXT, name TEXT, department TEXT,
-                experience TEXT, job_satisfaction TEXT, work_environment TEXT,
-                communication TEXT, management_support TEXT, training TEXT,
-                career_growth TEXT, resources TEXT, teamwork TEXT,
-                recommend TEXT, suggestions TEXT
-            )
-        """)
-    conn.commit()
-    conn.close()
+    conn = get_connection(); cur = conn.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS responses (
+        id SERIAL PRIMARY KEY,
+        company_name TEXT, name TEXT, department TEXT, experience TEXT,
+        job_satisfaction TEXT, work_environment TEXT, communication TEXT,
+        management_support TEXT, training TEXT, career_growth TEXT,
+        resources TEXT, teamwork TEXT, recommend TEXT, suggestions TEXT)""" if IS_POSTGRES else """CREATE TABLE IF NOT EXISTS responses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        company_name TEXT, name TEXT, department TEXT, experience TEXT,
+        job_satisfaction TEXT, work_environment TEXT, communication TEXT,
+        management_support TEXT, training TEXT, career_growth TEXT,
+        resources TEXT, teamwork TEXT, recommend TEXT, suggestions TEXT)""")
+    conn.commit(); conn.close()
 
 def insert_response(company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions):
-    conn = get_connection()
-    cur = conn.cursor()
+    conn = get_connection(); cur = conn.cursor()
     if IS_POSTGRES:
         cur.execute("INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
     else:
         cur.execute("INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
-    conn.commit()
-    conn.close()
+    conn.commit(); conn.close()
 
 def get_all_responses():
     conn = get_connection()
     if IS_POSTGRES and psycopg2:
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cur.execute("SELECT * FROM responses ORDER BY id DESC")
-        rows = cur.fetchall()
-        conn.close()
-        return rows
+        rows = cur.fetchall(); conn.close(); return rows
     else:
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM responses ORDER BY id DESC")
-        rows = cur.fetchall()
-        conn.close()
-        return [dict(r) for r in rows]
+        cur = conn.cursor(); cur.execute("SELECT * FROM responses ORDER BY id DESC")
+        rows = cur.fetchall(); conn.close(); return [dict(r) for r in rows]
 
 def delete_all_responses():
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("DELETE FROM responses")
-    conn.commit()
-    conn.close()
+    conn = get_connection(); cur = conn.cursor()
+    cur.execute("DELETE FROM responses"); conn.commit(); conn.close()
