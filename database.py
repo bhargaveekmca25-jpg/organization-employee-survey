@@ -8,9 +8,9 @@ except:
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 IS_POSTGRES = False
-if DATABASE_URL and DATABASE_URL.startswith(("postgres://", "postgresql://")):
+if DATABASE_URL and DATABASE_URL.startswith(("postgres://","postgresql://")):
     if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        DATABASE_URL = DATABASE_URL.replace("postgres://","postgresql://",1)
     IS_POSTGRES = True
 
 def get_connection():
@@ -35,7 +35,7 @@ def insert_response(company_name, name, department, experience, job_satisfaction
     conn = get_connection()
     cur = conn.cursor()
     if IS_POSTGRES:
-        cur.execute("INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
+        cur.execute("INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) VALUES (%s,%s,%s,%s,%s,%s)", (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
     else:
         cur.execute("INSERT INTO responses (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions))
     conn.commit()
