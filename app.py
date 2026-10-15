@@ -1,5 +1,6 @@
 
 from flask import Flask, render_template, request
+
 from database import (
     create_database,
     insert_response,
@@ -9,9 +10,7 @@ from database import (
 
 app = Flask(__name__)
 
-
 # ---------------- DATABASE INITIALIZATION ----------------
-# Runs when the application starts, including under Gunicorn.
 create_database()
 
 
@@ -30,23 +29,30 @@ def survey():
 # ---------------- SUBMIT SURVEY ----------------
 @app.route("/submit", methods=["POST"])
 def submit():
-    company_name = request.form.get("company_name", "").strip()
+    company_name = " ".join(
+        request.form.get("company_name", "").strip().split()
+    )
+    employee_id = " ".join(
+        request.form.get("employee_id", "").strip().split()
+    ).upper()
+
     name = request.form.get("name", "").strip()
-    department = request.form.get("department", "")
-    experience = request.form.get("experience", "")
-    job_satisfaction = request.form.get("job_satisfaction", "")
-    work_environment = request.form.get("work_environment", "")
-    communication = request.form.get("communication", "")
-    management_support = request.form.get("management_support", "")
-    training = request.form.get("training", "")
-    career_growth = request.form.get("career_growth", "")
-    resources = request.form.get("resources", "")
-    teamwork = request.form.get("teamwork", "")
-    recommend = request.form.get("recommend", "")
+    department = request.form.get("department", "").strip()
+    experience = request.form.get("experience", "").strip()
+    job_satisfaction = request.form.get("job_satisfaction", "").strip()
+    work_environment = request.form.get("work_environment", "").strip()
+    communication = request.form.get("communication", "").strip()
+    management_support = request.form.get("management_support", "").strip()
+    training = request.form.get("training", "").strip()
+    career_growth = request.form.get("career_growth", "").strip()
+    resources = request.form.get("resources", "").strip()
+    teamwork = request.form.get("teamwork", "").strip()
+    recommend = request.form.get("recommend", "").strip()
     suggestions = request.form.get("suggestions", "").strip()
 
     required_fields = [
         company_name,
+        employee_id,
         name,
         department,
         experience,
@@ -62,10 +68,12 @@ def submit():
     ]
 
     if not all(required_fields):
-        return "Please fill all required fields.", 400
+        return "Please fill in all required fields, including Employee ID.", 400
 
-    insert_response(
+    # Order must match database.py insert_response()
+    data = [
         company_name,
+        employee_id,
         name,
         department,
         experience,
@@ -79,7 +87,22 @@ def submit():
         teamwork,
         recommend,
         suggestions
-    )
+    ]
+
+    try:
+        inserted = insert_response(data)
+
+    except ValueError as error:
+        return str(error), 400
+
+    if not inserted:
+        return render_template(
+            "survey.html",
+            error=(
+                "Duplicate submission blocked! This Employee ID has "
+                "already submitted a survey for this company."
+            )
+        ), 409
 
     return render_template(
         "success.html",
@@ -123,12 +146,8 @@ def analysis():
     company_data = {}
 
     for row in responses:
-        company = row["company_name"]
-
-        if company not in company_data:
-            company_data[company] = 0
-
-        company_data[company] += 1
+        company = row["company_name"] or "Unknown Company"
+        company_data[company] = company_data.get(company, 0) + 1
 
     # Survey question response counts
     questions = {
