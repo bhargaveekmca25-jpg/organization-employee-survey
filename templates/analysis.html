@@ -3,286 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Dashboard</title>
-
-    <!-- Chart JS -->
+    <title>Analysis - Employee Feedback</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f1f5f9;
+            padding: 20px;
+            color: #1e293b;
         }
 
         /* Header */
         .header {
-            background: #1e3a8a;
-            color: white;
-            padding: 16px 5%;
+            background: #ffffff;
+            padding: 18px 20px;
+            border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #2563eb;
         }
-
-        .header h2 {
-            font-size: 18px;
+        .header h3 {
+            font-size: 16px;
+            color: #1e293b;
         }
-
-        .header p {
-            font-size: 11px;
-            opacity: 0.8;
-            margin-top: 3px;
+        .header h3 span {
+            color: #2563eb;
         }
-
-        .nav a {
-            color: white;
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
             text-decoration: none;
-            border: 1px solid white;
-            padding: 6px 12px;
-            border-radius: 6px;
             font-size: 12px;
-            margin-left: 6px;
+            font-weight: 600;
+            color: white;
         }
+        .btn-home { background: #2563eb; }
+        .btn-admin { background: #334155; margin-left: 6px; }
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-
-        /* Top Cards */
-        .top-cards {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+        /* Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
             margin-bottom: 20px;
         }
-
         .card {
-            background: white;
-            padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            min-width: 180px;
-            border-left: 4px solid #2563eb;
-        }
-
-        .card p {
-            font-size: 11px;
-            color: #64748b;
-            letter-spacing: 0.5px;
-        }
-
-        .card h2 {
-            color: #1d4ed8;
-            margin-top: 5px;
-            font-size: 24px;
-        }
-
-        .card small {
-            font-size: 10px;
-            color: #94a3b8;
-        }
-
-        /* Section Title */
-        .section-title {
-            font-size: 16px;
-            color: #1e3a8a;
-            margin: 25px 0 12px 0;
-            font-weight: bold;
-        }
-
-        /* Charts Grid */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 16px;
-        }
-
-        .chart-box {
-            background: white;
+            background: #ffffff;
             padding: 16px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .card h4 {
+            font-size: 13px;
+            color: #1e293b;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f1f5f9;
         }
 
-        .chart-box h4 {
+        /* Company Chart - CHOTA SIZE */
+        .company-card {
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .company-card h4 {
             font-size: 13px;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+        .chart-small-wrapper {
+            width: 100%;
+            max-width: 340px;
+            height: 340px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Question Charts */
+        .q-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .q-card {
+            background: #ffffff;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .q-card h5 {
+            font-size: 12px;
             color: #334155;
             margin-bottom: 10px;
             text-align: center;
         }
+        .q-chart-box {
+            width: 100%;
+            height: 220px;
+        }
 
         /* Suggestions */
-        .suggestion-grid {
-            display: grid;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .suggestion-card {
-            background: white;
-            padding: 14px;
-            border-radius: 10px;
-            border-left: 4px solid #2563eb;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .suggestion-card p {
-            font-size: 13px;
+        .s-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 22px 0 10px 4px;
             color: #1e293b;
-            line-height: 1.5;
+            border-left: 3px solid #2563eb;
+            padding-left: 8px;
         }
-
-        .suggestion-card small {
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 6px;
-            display: block;
+        .s-card {
+            background: #ffffff;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin: 8px 0;
+            font-size: 12.5px;
+            border: 1px solid #e2e8f0;
+            border-left: 3px solid #2563eb;
         }
-
         .empty {
-            font-size: 12px;
-            color: #64748b;
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
             text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .grid, .q-grid { grid-template-columns: 1fr; }
+            .chart-small-wrapper { max-width: 300px; height: 300px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header class="header">
+    <!-- Header -->
+    <div class="header">
+        <h3>Analysis Dashboard — <span>Total: {{ total }} Responses</span></h3>
         <div>
-            <h2>📊 Analysis Dashboard</h2>
-            <p>Anonymous - No employee name is shown here</p>
+            <a href="/" class="btn btn-home">Home</a>
+            <a href="/admin" class="btn btn-admin">Admin</a>
         </div>
-        <div class="nav">
-            <a href="/">🏠 Home</a>
-            <a href="/admin">🛡️ Admin</a>
-        </div>
-    </header>
-
-    <!-- MAIN CONTAINER -->
-    <div class="container">
-
-        <!-- TOTAL COUNT -->
-        <div class="top-cards">
-            <div class="card">
-                <p>TOTAL RESPONSES</p>
-                <h2>{{ total }}</h2>
-                <small>Anonymous count only</small>
-            </div>
-
-            <div class="card" style="border-left-color: #10b981;">
-                <p>PRIVACY STATUS</p>
-                <h2 style="color:#10b981; font-size:16px; margin-top:8px;">
-                    Names Hidden
-                </h2>
-                <small>Employee identity is protected</small>
-            </div>
-        </div>
-
-        <!-- COMPANY WISE CHART -->
-        <h3 class="section-title">🏢 Company Wise Responses</h3>
-        <div class="charts-grid">
-            <div class="chart-box">
-                <h4>Responses by Company</h4>
-                <canvas id="companyChart"></canvas>
-            </div>
-        </div>
-
-        <!-- QUESTION WISE CHARTS -->
-        <h3 class="section-title">📈 Question Wise Analysis</h3>
-        <div class="charts-grid">
-            {% for q_name, q_data in question_data.items() %}
-            <div class="chart-box">
-                <h4>{{ q_name }}</h4>
-                <canvas id="chart{{ loop.index }}"></canvas>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- ANONYMOUS SUGGESTIONS -->
-        <h3 class="section-title">💬 Anonymous Suggestions</h3>
-        <div class="suggestion-grid">
-            {% for s in suggestions %}
-            <div class="suggestion-card">
-                <p>"{{ s.suggestion }}"</p>
-                <small>- Anonymous Employee (Identity Hidden)</small>
-            </div>
-            {% else %}
-            <div class="empty">No suggestions yet</div>
-            {% endfor %}
-        </div>
-
     </div>
 
-    <!-- CHART SCRIPT -->
-    <script>
-        // Company Chart
-        const companyData = {{ company_data | tojson }};
+    {% if total == 0 %}
+        <div class="card">
+            <div class="empty">No data yet. Please submit feedback first.</div>
+        </div>
+    {% else %}
+
+    <!-- Company Wise Responses - SMALL CHART -->
+    <div class="company-card">
+        <h4>Company Wise Responses</h4>
+        <div class="chart-small-wrapper">
+            <canvas id="companyChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Question Wise Analysis -->
+    <div class="s-title">Question Wise Analysis</div>
+    <div class="q-grid">
+        {% for q_name, q_values in question_data.items() %}
+        <div class="q-card">
+            <h5>{{ q_name }}</h5>
+            <div class="q-chart-box">
+                <canvas id="chart-{{ loop.index }}"></canvas>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Suggestions -->
+    <div class="s-title">Anonymous Suggestions</div>
+    {% for s in suggestions %}
+        <div class="s-card">{{ s.suggestion }}</div>
+    {% else %}
+        <div class="s-card" style="color:#94a3b8;">No suggestions yet</div>
+    {% endfor %}
+
+    {% endif %}
+
+<script>
+    // Company Pie Chart
+    const companyData = {{ company_data | tojson }};
+    const companyLabels = Object.keys(companyData);
+    const companyValues = Object.values(companyData);
+
+    new Chart(document.getElementById('companyChart'), {
+        type: 'pie',
+        data: {
+            labels: companyLabels,
+            datasets: [{
+                data: companyValues,
+                backgroundColor: [
+                    '#2563eb', '#10b981', '#f59e0b', '#ef4444', 
+                    '#8b5cf6', '#06b6d4', '#ec4899', '#14b8a6'
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        font: { size: 11 },
+                        padding: 16,
+                        color: '#334155'
+                    }
+                }
+            }
+        }
+    });
+
+    // Question Wise Bar Charts
+    const questionData = {{ question_data | tojson }};
+    let idx = 1;
+    for (const [qName, qVals] of Object.entries(questionData)) {
+        const ctx = document.getElementById(`chart-${idx}`);
+        if (!ctx) { idx++; continue; }
         
-        new Chart(document.getElementById('companyChart'), {
-            type: 'pie',
+        new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: Object.keys(companyData),
+                labels: Object.keys(qVals),
                 datasets: [{
-                    data: Object.values(companyData),
-                    backgroundColor: [
-                        '#2563eb', '#10b981', '#f59e0b', 
-                        '#ef4444', '#8b5cf6', '#06b6d4'
-                    ]
+                    label: 'Count',
+                    data: Object.values(qVals),
+                    backgroundColor: '#3b82f6',
+                    borderRadius: 6,
+                    barThickness: 18
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom' }
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } }, grid: { color: '#f1f5f9' } },
+                    x: { ticks: { font: { size: 10 } }, grid: { display: false } }
                 }
             }
         });
-
-        // Question Charts
-        const questionData = {{ question_data | tojson }};
-        let index = 1;
-
-        for (let q in questionData) {
-            let ctx = document.getElementById('chart' + index);
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(questionData[q]),
-                        datasets: [{
-                            label: 'Count',
-                            data: Object.values(questionData[q]),
-                            backgroundColor: '#3b82f6'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: { beginAtZero: true }
-                        },
-                        plugins: {
-                            legend: { display: false }
-                        }
-                    }
-                });
-            }
-            index++;
-        }
-    </script>
+        idx++;
+    }
+</script>
 
 </body>
 </html>
