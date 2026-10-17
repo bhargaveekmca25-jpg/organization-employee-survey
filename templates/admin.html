@@ -3,166 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Admin Dashboard</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #f1f5f9;
-            padding: 20px;
+            background:#f1f5f9;
+            min-height:100vh;
         }
-        /* Header - Same as other pages */
-        .header{
-            background: #ffffff;
-            padding: 18px 20px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            border: 1px solid #e2e8f0;
-            border-left: 5px solid #2563eb;
-        }
-        .header h3{color:#1e293b; font-size:16px;}
-        .header h3 span{color:#2563eb;}
-        .btn{
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
-        }
-        .btn-home{background:#2563eb;}
-        .btn-reset{background:#ffffff; color:#ef4444; border:1px solid #fecaca; margin-left:8px;}
 
-        /* Table Card - Same as survey card */
-        .card{
-            background:#ffffff;
-            border-radius:12px;
-            overflow:hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            border:1px solid #e2e8f0;
+        /* Top Header - Screenshot jaisa gradient */
+        .top-header{
+            background: linear-gradient(90deg, #0f172a 0%, #1e40af 60%, #2563eb 100%);
+            color:white;
+            padding:14px 20px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
         }
-        table{width:100%; border-collapse:collapse; font-size:12.5px;}
-        th{
-            background:#f8fafc;
-            color:#475569;
-            padding:13px 12px;
-            text-align:left;
+        .top-header h2{
+            font-size:17px;
             font-weight:700;
-            font-size:11px;
-            text-transform:uppercase;
-            letter-spacing:0.5px;
-            border-bottom:2px solid #e2e8f0;
+            display:flex;
+            align-items:center;
+            gap:6px;
         }
-        td{
-            padding:12px;
-            border-bottom:1px solid #f1f5f9;
-            color:#334155;
+        .top-header p{
+            font-size:10px;
+            opacity:0.8;
+            margin-top:2px;
         }
-        tr:last-child td{border-bottom:none}
-        tr:hover{background:#f8fafc}
-
-        .tag{
-            display:inline-block;
-            padding:3px 8px;
-            border-radius:6px;
+        .top-btns a{
+            text-decoration:none;
             font-size:11px;
             font-weight:600;
-            background:#eff6ff;
-            color:#2563eb;
-            border:1px solid #dbeafe;
+            padding:6px 12px;
+            border-radius:6px;
+            margin-left:6px;
+            display:inline-block;
+            border:1px solid rgba(255,255,255,0.3);
         }
-        .tag-dept{background:#f5f3ff; color:#7c3aed; border-color:#ede9fe;}
-        .tag-name{color:#1e293b; font-weight:700;}
+        .btn-home-top{background:rgba(255,255,255,0.15); color:white;}
+        .btn-analysis-top{background:rgba(255,255,255,0.15); color:white;}
 
-        /* Suggestion - Same as other pages */
-        .section{
-            margin-top:22px;
+        /* Stats Cards */
+        .stats-wrapper{
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr;
+            gap:16px;
+            padding:20px;
+            max-width:1200px;
+            margin:0 auto;
         }
-        .section h4{
-            font-size:14px;
-            color:#1e293b;
-            margin-bottom:10px;
-            padding-left:4px;
-            border-left:3px solid #2563eb;
-        }
-        .s-card{
-            background:#ffffff;
-            padding:12px 14px;
+        .stat-card{
+            background:white;
             border-radius:10px;
-            margin:8px 0;
-            font-size:12.5px;
+            padding:16px 18px;
+            box-shadow:0 1px 4px rgba(0,0,0,0.06);
             border:1px solid #e2e8f0;
-            border-left:3px solid #2563eb;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            border-left:4px solid #2563eb;
         }
-        .empty{
-            text-align:center;
-            padding:30px;
+        .stat-card .label{
+            font-size:11px;
+            color:#64748b;
+            font-weight:500;
+        }
+        .stat-card .value{
+            font-size:22px;
+            font-weight:800;
+            color:#2563eb;
+            margin-top:6px;
+        }
+
+        /* Main Table Card */
+        .main-card{
+            background:white;
+            border-radius:12px;
+            padding:16px;
+            margin:0 20px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.05);
+            border:1px solid #e2e8f0;
+            max-width:1200px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        .main-card-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:14px;
+        }
+        .main-card-header h4{
+            font-size:15px;
+            color:#1e3a8a;
+            display:flex;
+            align-items:center;
+            gap:6px;
+        }
+        .search-box input{
+            padding:7px 12px;
+            border:1px solid #e2e8f0;
+            border-radius:8px;
+            font-size:11px;
+            width:200px;
+            outline:none;
+        }
+        .search-box input:focus{border-color:#2563eb}
+
+        /* Table */
+        .table-wrap{
+            overflow-x:auto;
+            border-radius:8px;
+            border:1px solid #e2e8f0;
+        }
+        table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:11px;
+            white-space:nowrap;
+        }
+        th{
+            background:#1e3a8a;
+            color:white;
+            padding:10px 8px;
+            text-align:left;
+            font-weight:600;
+            font-size:10px;
+        }
+        td{
+            padding:10px 8px;
+            border-bottom:1px solid #f1f5f9;
+            color:#334155;
+            font-size:11px;
+        }
+        tr:hover{background:#f8fafc}
+        tr:last-child td{border-bottom:none}
+
+        /* Bottom Buttons */
+        .bottom-btns{
+            margin-top:16px;
+            display:flex;
+            gap:8px;
+        }
+        .b-btn{
+            padding:8px 14px;
+            border-radius:6px;
+            font-size:11px;
+            font-weight:700;
+            text-decoration:none;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+        .b-blue{background:#2563eb}
+        .b-dark{background:#334155}
+        .b-red{background:#dc2626}
+
+        /* Footer */
+        .footer{
+            background:#0f172a;
             color:#94a3b8;
-            font-size:13px;
+            text-align:center;
+            padding:14px;
+            font-size:10px;
+            margin-top:30px;
+        }
+
+        @media(max-width:768px){
+            .stats-wrapper{grid-template-columns:1fr}
+            .main-card{margin:0 10px}
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h3>Admin Panel <span>— Total: {{ total }}</span></h3>
+    <!-- Top Gradient Header -->
+    <div class="top-header">
         <div>
-            <a href="/" class="btn btn-home">Home</a>
-            <a href="/reset" class="btn btn-reset" onclick="return confirm('Delete all data?')">Reset</a>
+            <h2>🛡️ Admin Dashboard</h2>
+            <p>Survey Responses Management</p>
+        </div>
+        <div class="top-btns">
+            <a href="/" class="btn-home-top">🏠 Home</a>
+            <a href="/analysis" class="btn-analysis-top">📊 Analysis</a>
         </div>
     </div>
 
-    <div class="card">
-        <div style="overflow-x:auto">
-            <table>
+    <!-- 3 Stat Cards -->
+    <div class="stats-wrapper">
+        <div class="stat-card">
+            <div class="label">Total Responses</div>
+            <div class="value">{{ total }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Database</div>
+            <div class="value">SQLite</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Status</div>
+            <div class="value">Active</div>
+        </div>
+    </div>
+
+    <!-- Main Table -->
+    <div class="main-card">
+        <div class="main-card-header">
+            <h4>📋 Employee Responses</h4>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search responses..." onkeyup="searchTable()">
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table id="responseTable">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Company</th>
                         <th>Name</th>
+                        <th>Company / Organization</th>
                         <th>Department</th>
                         <th>Experience</th>
-                        <th>Satisfaction</th>
-                        <th>Work Env</th>
+                        <th>Job Satisfaction</th>
+                        <th>Work Environment</th>
+                        <th>Communication</th>
+                        <th>Management Support</th>
+                        <th>Training</th>
+                        <th>Career Growth</th>
+                        <th>Resources</th>
+                        <th>Teamwork</th>
+                        <th>Recommend</th>
                         <th>Suggestion</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for r in rows %}
-                <tr>
-                    <td style="color:#94a3b8;">{{ r[0] }}</td>
-                    <td><span class="tag">{{ r[1] }}</span></td>
-                    <td class="tag-name">{{ r[2] }}</td>
-                    <td><span class="tag tag-dept">{{ r[3] }}</span></td>
-                    <td>{{ r[4] }}</td>
-                    <td>{{ r[5] }}</td>
-                    <td>{{ r[6] }}</td>
-                    <td style="max-width:180px; color:#475569;">{{ r[14] }}</td>
-                </tr>
-                {% else %}
-                <tr><td colspan="8"><div class="empty">No data available yet</div></td></tr>
-                {% endfor %}
+                    {% for r in rows %}
+                    <tr>
+                        <td>{{ r[0] }}</td>
+                        <td>{{ r[2] }}</td>
+                        <td>{{ r[1] }}</td>
+                        <td>{{ r[3] }}</td>
+                        <td>{{ r[4] }}</td>
+                        <td>{{ r[5] }}</td>
+                        <td>{{ r[6] }}</td>
+                        <td>{{ r[7] }}</td>
+                        <td>{{ r[8] }}</td>
+                        <td>{{ r[9] }}</td>
+                        <td>{{ r[10] }}</td>
+                        <td>{{ r[11] }}</td>
+                        <td>{{ r[12] }}</td>
+                        <td>{{ r[13] }}</td>
+                        <td>{{ r[14] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="15" style="text-align:center; padding:20px; color:#94a3b8;">No responses found</td></tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        <!-- Bottom Buttons - Screenshot jaisa -->
+        <div class="bottom-btns">
+            <a href="/analysis" class="b-btn b-blue">📊 View Analysis</a>
+            <a href="/" class="b-btn b-dark">🏠 Back to Home</a>
+            <a href="/reset" class="b-btn b-red" onclick="return confirm('Are you sure you want to delete all responses?')">🗑️ Reset All Responses</a>
+        </div>
     </div>
 
-    <div class="section">
-        <h4>Suggestions with Name</h4>
-        {% for s in suggestions %}
-        <div class="s-card">
-            <b style="color:#1e293b;">{{ s.name }}</b> <span class="tag" style="margin-left:6px;">{{ s.company }}</span> <span class="tag tag-dept">{{ s.department }}</span>
-            <div style="margin-top:6px; color:#475569;">{{ s.suggestion }}</div>
-        </div>
-        {% else %}
-        <div class="s-card" style="color:#94a3b8;">No suggestions yet</div>
-        {% endfor %}
+    <div class="footer">
+        © 2026 Survey Form Analysis System | Employee Feedback & Analysis Platform
     </div>
+
+<script>
+function searchTable() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let rows = document.querySelectorAll("#responseTable tbody tr");
+    rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+    });
+}
+</script>
 
 </body>
 </html>

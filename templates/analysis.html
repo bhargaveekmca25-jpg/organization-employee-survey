@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis - Employee Feedback</title>
+    <title>Survey Analysis Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -11,263 +11,350 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f1f5f9;
-            padding: 20px;
-            color: #1e293b;
+            min-height: 100vh;
         }
 
-        /* Header */
-        .header {
-            background: #ffffff;
-            padding: 18px 20px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            border: 1px solid #e2e8f0;
-            border-left: 5px solid #2563eb;
-        }
-        .header h3 {
-            font-size: 16px;
-            color: #1e293b;
-        }
-        .header h3 span {
-            color: #2563eb;
-        }
-        .btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
+        /* Top Header - Same as Admin */
+        .top-header {
+            background: linear-gradient(90deg, #0f172a 0%, #1e40af 60%, #2563eb 100%);
             color: white;
+            padding: 16px 24px;
         }
-        .btn-home { background: #2563eb; }
-        .btn-admin { background: #334155; margin-left: 6px; }
 
-        /* Cards */
-        .grid {
+        .top-header h2 {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .top-header p {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 3px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 22px;
+        }
+
+        /* Top 2 Cards */
+        .top-cards {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
             margin-bottom: 20px;
-        }
-        .card {
-            background: #ffffff;
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .card h4 {
-            font-size: 13px;
-            color: #1e293b;
-            margin-bottom: 14px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #f1f5f9;
         }
 
-        /* Company Chart - CHOTA SIZE */
-        .company-card {
-            background: #ffffff;
-            padding: 16px;
-            border-radius: 12px;
+        .top-card {
+            background: white;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
             border: 1px solid #e2e8f0;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-top: 3px solid #2563eb;
         }
-        .company-card h4 {
-            font-size: 13px;
+
+        .top-card .label {
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        .top-card .value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #2563eb;
+            margin-top: 4px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
             color: #1e293b;
-            margin-bottom: 12px;
-        }
-        .chart-small-wrapper {
-            width: 100%;
-            max-width: 340px;
-            height: 340px;
-            margin: 0 auto;
+            margin: 20px 0 10px 2px;
             display: flex;
-            justify-content: center;
             align-items: center;
+            gap: 6px;
         }
 
-        /* Question Charts */
+        .white-card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 18px;
+        }
+
+        /* Pie Chart - Chota Center */
+        .pie-wrapper {
+            width: 100%;
+            max-width: 360px;
+            height: 320px;
+            margin: 0 auto;
+        }
+
+        .pie-wrapper h5 {
+            font-size: 12px;
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 4px;
+        }
+
+        .pie-wrapper p {
+            font-size: 9px;
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+
+        /* Organization Cards */
+        .org-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .org-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 14px;
+            border: 1px solid #e2e8f0;
+            border-left: 3px solid #2563eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .org-card b {
+            font-size: 11px;
+            color: #1e3a8a;
+        }
+
+        .org-card div {
+            font-size: 9px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .org-card span {
+            font-size: 15px;
+            font-weight: 800;
+            color: #2563eb;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* Question-wise */
         .q-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
         }
+
         .q-card {
-            background: #ffffff;
+            background: white;
+            border-radius: 10px;
             padding: 14px;
-            border-radius: 12px;
             border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
         }
+
         .q-card h5 {
-            font-size: 12px;
-            color: #334155;
+            font-size: 11px;
+            color: #1e293b;
             margin-bottom: 10px;
-            text-align: center;
         }
+
         .q-chart-box {
             width: 100%;
-            height: 220px;
+            height: 180px;
         }
 
-        /* Suggestions */
-        .s-title {
-            font-size: 14px;
+        .breakdown {
+            margin-top: 12px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 8px;
+        }
+
+        .breakdown-title {
+            font-size: 10px;
             font-weight: 700;
-            margin: 22px 0 10px 4px;
-            color: #1e293b;
-            border-left: 3px solid #2563eb;
-            padding-left: 8px;
-        }
-        .s-card {
-            background: #ffffff;
-            padding: 12px 14px;
-            border-radius: 10px;
-            margin: 8px 0;
-            font-size: 12.5px;
-            border: 1px solid #e2e8f0;
-            border-left: 3px solid #2563eb;
-        }
-        .empty {
-            text-align: center;
-            padding: 20px;
-            color: #94a3b8;
-            font-size: 13px;
+            color: #334155;
+            margin-bottom: 6px;
         }
 
-        @media (max-width: 768px) {
-            .grid, .q-grid { grid-template-columns: 1fr; }
-            .chart-small-wrapper { max-width: 300px; height: 300px; }
+        .break-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #64748b;
+            padding: 4px 0;
+            border-bottom: 1px dashed #f1f5f9;
+        }
+
+        .break-row b {
+            color: #2563eb;
+        }
+
+        @media (max-width: 700px) {
+            .top-cards,
+            .q-grid,
+            .org-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <div class="header">
-        <h3>Analysis Dashboard — <span>Total: {{ total }} Responses</span></h3>
-        <div>
-            <a href="/" class="btn btn-home">Home</a>
-            <a href="/admin" class="btn btn-admin">Admin</a>
-        </div>
+    <div class="top-header">
+        <h2>📊 Survey Analysis Dashboard</h2>
+        <p>Employee Feedback & Organization Analysis</p>
     </div>
 
-    {% if total == 0 %}
-        <div class="card">
-            <div class="empty">No data yet. Please submit feedback first.</div>
-        </div>
-    {% else %}
+    <div class="container">
 
-    <!-- Company Wise Responses - SMALL CHART -->
-    <div class="company-card">
-        <h4>Company Wise Responses</h4>
-        <div class="chart-small-wrapper">
-            <canvas id="companyChart"></canvas>
-        </div>
-    </div>
-
-    <!-- Question Wise Analysis -->
-    <div class="s-title">Question Wise Analysis</div>
-    <div class="q-grid">
-        {% for q_name, q_values in question_data.items() %}
-        <div class="q-card">
-            <h5>{{ q_name }}</h5>
-            <div class="q-chart-box">
-                <canvas id="chart-{{ loop.index }}"></canvas>
+        <!-- Total Cards -->
+        <div class="top-cards">
+            <div class="top-card">
+                <div class="label">Total Survey Responses</div>
+                <div class="value">{{ total }}</div>
+            </div>
+            <div class="top-card">
+                <div class="label">Total Organizations</div>
+                <div class="value">{{ company_data|length }}</div>
             </div>
         </div>
-        {% endfor %}
+
+        {% if total > 0 %}
+
+        <!-- Overall Pie -->
+        <div class="section-title">📊 Overall Response Distribution</div>
+        <div class="white-card">
+            <div class="pie-wrapper">
+                <h5>Overall Job Satisfaction</h5>
+                <p>Percentage distribution of employee satisfaction responses</p>
+                <canvas id="overallPie"></canvas>
+            </div>
+        </div>
+
+        <!-- Organization Wise -->
+        <div class="section-title">🏢 Organization-wise Responses</div>
+        <div class="org-grid">
+            {% for comp, count in company_data.items() %}
+            <div class="org-card">
+                <b>{{ comp }}</b>
+                <div>Total Responses</div>
+                <span>{{ count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Question Wise -->
+        <div class="section-title">📋 Question-wise Analysis</div>
+        <div class="q-grid">
+            {% for q_name, q_vals in question_data.items() %}
+            <div class="q-card">
+                <h5>{{ q_name }}</h5>
+                <div class="q-chart-box">
+                    <canvas id="chart-{{ loop.index }}"></canvas>
+                </div>
+                <div class="breakdown">
+                    <div class="breakdown-title">Answer Breakdown</div>
+                    {% set total_q = q_vals.values()|sum %}
+                    {% for ans, cnt in q_vals.items() %}
+                    <div class="break-row">
+                        <span>{{ ans }}</span>
+                        <span><b>{{ cnt }}</b> ({{ "%.1f"|format(cnt/total_q*100 if total_q else 0) }}%)</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="white-card" style="text-align:center; color:#94a3b8; padding:30px;">
+            No data yet. Submit feedback first.
+        </div>
+        {% endif %}
+
     </div>
 
-    <!-- Suggestions -->
-    <div class="s-title">Anonymous Suggestions</div>
-    {% for s in suggestions %}
-        <div class="s-card">{{ s.suggestion }}</div>
-    {% else %}
-        <div class="s-card" style="color:#94a3b8;">No suggestions yet</div>
-    {% endfor %}
-
-    {% endif %}
-
-<script>
-    // Company Pie Chart
-    const companyData = {{ company_data | tojson }};
-    const companyLabels = Object.keys(companyData);
-    const companyValues = Object.values(companyData);
-
-    new Chart(document.getElementById('companyChart'), {
-        type: 'pie',
-        data: {
-            labels: companyLabels,
-            datasets: [{
-                data: companyValues,
-                backgroundColor: [
-                    '#2563eb', '#10b981', '#f59e0b', '#ef4444', 
-                    '#8b5cf6', '#06b6d4', '#ec4899', '#14b8a6'
-                ],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 12,
-                        font: { size: 11 },
-                        padding: 16,
-                        color: '#334155'
-                    }
-                }
-            }
-        }
-    });
-
-    // Question Wise Bar Charts
-    const questionData = {{ question_data | tojson }};
-    let idx = 1;
-    for (const [qName, qVals] of Object.entries(questionData)) {
-        const ctx = document.getElementById(`chart-${idx}`);
-        if (!ctx) { idx++; continue; }
+    <script>
+        const questionData = {{ question_data | tojson }};
         
-        new Chart(ctx, {
-            type: 'bar',
+        // Overall Pie = Job Satisfaction
+        const overall = questionData['Job Satisfaction'] || Object.values(questionData)[0] || {};
+        const overallLabels = Object.keys(overall);
+        const overallValues = Object.values(overall);
+
+        new Chart(document.getElementById('overallPie'), {
+            type: 'pie',
             data: {
-                labels: Object.keys(qVals),
+                labels: overallLabels,
                 datasets: [{
-                    label: 'Count',
-                    data: Object.values(qVals),
-                    backgroundColor: '#3b82f6',
-                    borderRadius: 6,
-                    barThickness: 18
+                    data: overallValues,
+                    backgroundColor: ['#22c55e', '#84cc16', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } }, grid: { color: '#f1f5f9' } },
-                    x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 10, font: { size: 9 }, padding: 14 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                                const pct = ((ctx.raw/total)*100).toFixed(1);
+                                return `${ctx.label}: ${pct}%`;
+                            }
+                        }
+                    }
                 }
             }
         });
-        idx++;
-    }
-</script>
+
+        // Bar Charts
+        let idx = 1;
+        for (const [qName, qVals] of Object.entries(questionData)) {
+            const canvas = document.getElementById(`chart-${idx}`);
+            if (!canvas) { idx++; continue; }
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(qVals),
+                    datasets: [{
+                        data: Object.values(qVals),
+                        backgroundColor: '#2563eb',
+                        borderRadius: 4,
+                        barThickness: 30
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision:0, font:{size:9} }, grid:{color:'#f8fafc'} },
+                        x: { ticks: { font:{size:8}, maxRotation:20 }, grid:{display:false} }
+                    }
+                }
+            });
+            idx++;
+        }
+    </script>
 
 </body>
 </html>
