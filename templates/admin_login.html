@@ -5,84 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
     <style>
-        body {
-            font-family: Arial;
-            background: #f1f5f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .box {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 340px;
-            text-align: center;
-        }
-        input {
-            width: 100%;
-            padding: 11px;
-            margin: 10px 0;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            background: #f8fafc;
-        }
-        button {
-            width: 100%;
-            padding: 11px;
-            background: #1d4ed8;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-        button:hover { background: #1e40af; }
-        .err {
-            color: white;
-            background: #ef4444;
-            padding: 6px;
-            border-radius: 5px;
-            font-size: 11px;
-            margin-bottom: 10px;
-        }
-        .hint {
-            font-size: 10px;
-            color: #94a3b8;
-            margin-top: 10px;
-        }
+        body { font-family: Arial; background: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 340px; text-align: center; }
+        input { width: 100%; padding: 11px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 6px; }
+        button { width: 100%; padding: 11px; background: #1d4ed8; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .err { color: white; background: #ef4444; padding: 8px; border-radius: 5px; font-size: 11px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <div class="box">
         <h3>🛡️ Admin Login</h3>
-        <p style="font-size:11px; color:#64748b; margin-top:4px;">
-            Only admin can see who responded
-        </p>
-
-        {% if error %}
-            <div class="err">{{ error }}</div>
-        {% endif %}
-
+        {% if error %}<div class="err">{{ error }}</div>{% endif %}
         <form action="/admin" method="POST">
-            <input 
-                type="password" 
-                name="password" 
-                placeholder="Enter password" 
-                required
-                autofocus
-            >
+            <input type="password" name="password" placeholder="Enter admin123" required autofocus>
             <button type="submit">Login</button>
         </form>
-
-        <p class="hint">Password: admin123</p>
-
-        <a href="/" style="font-size:11px; display:block; margin-top:12px;">
-            Back to Home
-        </a>
+        <a href="/" style="font-size:11px; display:block; margin-top:12px;">Back to Home</a>
     </div>
 </body>
 </html>

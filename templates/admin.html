@@ -3,72 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Admin Panel</title>
     <style>
-        body {
-            font-family: Arial;
-            background: #f1f5f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .box {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 320px;
-            text-align: center;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #1d4ed8;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .err {
-            color: red;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: Arial; background: #f1f5f9; padding: 15px; }
+        .header { background: white; padding: 12px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        table { width: 100%; background: white; border-collapse: collapse; font-size: 11px; border-radius: 8px; overflow: hidden; }
+        th { background: #1e293b; color: white; padding: 8px; text-align: left; }
+        td { padding: 8px; border-bottom: 1px solid #e2e8f0; }
+        tr:hover { background: #f8fafc; }
+        .btn { padding: 6px 10px; border-radius: 4px; text-decoration: none; font-size: 11px; color: white; }
+        .btn-home { background: #334155; }
+        .btn-reset { background: #ef4444; }
+        .wrap { overflow-x: auto; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h3>🛡️ Admin Login</h3>
-        <p style="font-size:12px; color:#64748b;">
-            Only admin can see who responded
-        </p>
-
-        {% if error %}
-            <div class="err">{{ error }}</div>
-        {% endif %}
-
-        <form method="POST">
-            <input 
-                type="password" 
-                name="password" 
-                placeholder="Password: admin123" 
-                required
-            >
-            <button type="submit">Login</button>
-        </form>
-
-        <a href="/" style="font-size:11px; display:block; margin-top:12px;">
-            Back to Home
-        </a>
+    <div class="header">
+        <h4>Admin Panel - Total: {{ total }}</h4>
+        <div>
+            <a href="/" class="btn btn-home">Home</a>
+            <a href="/reset" class="btn btn-reset" onclick="return confirm('Sab data delete karna hai?')">Reset</a>
+        </div>
     </div>
+
+    <div class="wrap">
+        <table>
+            <tr>
+                <th>ID</th><th>Company</th><th>Name</th><th>Dept</th><th>Exp</th><th>Satisfaction</th><th>Work Env</th><th>Suggestion</th>
+            </tr>
+            {% for r in rows %}
+            <tr>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>{{ r[2] }}</td>
+                <td>{{ r[3] }}</td>
+                <td>{{ r[4] }}</td>
+                <td>{{ r[5] }}</td>
+                <td>{{ r[6] }}</td>
+                <td>{{ r[14] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <h4 style="margin: 15px 0 8px; font-size:13px;">Suggestions with Name</h4>
+    {% for s in suggestions %}
+        <p style="font-size:11px; background:white; padding:8px; border-radius:5px; margin:4px 0;"><b>{{ s.name }} ({{ s.company }}) - {{ s.department }}:</b> {{ s.suggestion }}</p>
+    {% endfor %}
 </body>
 </html>
