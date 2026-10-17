@@ -3,72 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submission Status</title>
+    <title>Success</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f1f5f9;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #eaf2ff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 15px;
+            min-height: 100vh;
+            padding: 20px;
         }
+
         .card {
-            background: white;
-            padding: 28px;
-            border-radius: 12px;
-            width: 400px;
+            background: #ffffff;
+            width: 100%;
+            max-width: 460px;
+            padding: 36px 28px;
+            border-radius: 18px;
             text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             border: 1px solid #e2e8f0;
-            border-top: 4px solid #2563eb;
         }
-        .success { border-top-color: #16a34a; }
-        .error-box { border-top-color: #dc2626; }
-        .icon { font-size: 40px; margin-bottom: 10px; }
-        h3 { color: #1e293b; margin-bottom: 8px; font-size: 16px; }
-        p { font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 18px; }
-        .error-msg {
+
+        .check-box {
+            width: 62px;
+            height: 62px;
+            background: #16a34a;
+            border: 3px solid #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 18px auto;
+        }
+
+        .check-box svg {
+            width: 32px;
+            height: 32px;
+            fill: none;
+            stroke: white;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #15803d;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 26px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-home {
+            background: #334155;
+        }
+
+        .btn-blue {
+            background: #2563eb;
+        }
+
+        .error-box {
             background: #fef2f2;
             border: 1px solid #fecaca;
             color: #dc2626;
             padding: 12px;
             border-radius: 8px;
             font-size: 12.5px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
-        .btn {
-            display: inline-block;
-            padding: 10px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
-            margin: 4px;
+
+        .error-card h2 {
+            color: #dc2626;
         }
-        .btn-home { background: #2563eb; }
-        .btn-analysis { background: #ffffff; color: #334155; border: 1px solid #e2e8f0; }
+
+        .error-card .check-box {
+            background: #dc2626;
+        }
     </style>
 </head>
 <body>
-    <div class="card {% if error %}error-box{% else %}success{% endif %}">
-        {% if error %}
-            <div class="icon">🚫</div>
-            <h3>Submission Blocked</h3>
-            <div class="error-msg">{{ error }}</div>
-            <p>One employee can work in only one organization at a time.</p>
-            <a href="/survey" class="btn btn-home">Try with Different Name</a>
-            <a href="/" class="btn btn-analysis">Home</a>
-        {% else %}
-            <div class="icon">✅</div>
-            <h3>Thank You!</h3>
-            <p>Your feedback for <b style="color:#2563eb;">{{ company }}</b> has been submitted successfully.</p>
-            <a href="/" class="btn btn-home">Home</a>
-            <a href="/analysis" class="btn btn-analysis">View Analysis</a>
-        {% endif %}
+
+    {% if error %}
+    <!-- Error Case: Employee already exists -->
+    <div class="card error-card">
+        <div class="check-box">
+            <svg viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </div>
+        <h2>Submission Blocked</h2>
+        <div class="error-box">{{ error }}</div>
+        <p>One employee can work in only one organization at a time.</p>
+        <div class="btn-group">
+            <a href="/" class="btn btn-home">← Home</a>
+            <a href="/survey" class="btn btn-blue">Try Different Name</a>
+        </div>
     </div>
+
+    {% else %}
+    <!-- Success Case: Screenshot jaisa -->
+    <div class="card">
+        <div class="check-box">
+            <svg viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+
+        <h2>Survey Submitted Successfully!</h2>
+        <p>Thank you for submitting your employee feedback.</p>
+
+        <div class="btn-group">
+            <a href="/" class="btn btn-home">← Home</a>
+            <a href="/analysis" class="btn btn-home">📊 Analysis</a>
+            <a href="/admin" class="btn btn-home">🛡️ Admin</a>
+            <a href="/survey" class="btn btn-blue">Submit Another Response</a>
+        </div>
+    </div>
+    {% endif %}
+
 </body>
 </html>
