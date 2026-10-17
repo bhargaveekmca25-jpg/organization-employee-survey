@@ -4,7 +4,7 @@ from collections import Counter
 
 app = Flask(__name__)
 
-# Admin ka password - yaha change kar sakte ho
+# Admin Password
 ADMIN_PASSWORD = "admin123"
 
 def init_db():
@@ -43,12 +43,10 @@ def get_all_data():
 
     total = len(rows)
 
-    # Company wise count
     company_data = dict(
         Counter([r[1] for r in rows if r[1]])
     )
 
-    # Question wise count
     question_map = {
         "Job Satisfaction": 5,
         "Work Environment": 6,
@@ -66,9 +64,8 @@ def get_all_data():
         vals = [r[idx] for r in rows if r[idx]]
         question_data[q_name] = dict(Counter(vals))
 
-    # Suggestions
-    suggestions_anon = []   # for analysis - no name
-    suggestions_full = []   # for admin - with name
+    suggestions_anon = []
+    suggestions_full = []
 
     for r in rows:
         if r[14] and str(r[14]).strip():
@@ -97,6 +94,8 @@ def submit():
     conn = sqlite3.connect('survey.db')
     c = conn.cursor()
 
+    company_name = request.form.get('company_name')
+
     c.execute('''
         INSERT INTO feedback (
             company_name, name, department, experience,
@@ -105,7 +104,7 @@ def submit():
             resources, teamwork, recommend, suggestions
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
-        request.form.get('company_name'),
+        company_name,
         request.form.get('name'),
         request.form.get('department'),
         request.form.get('experience'),
@@ -124,12 +123,11 @@ def submit():
     conn.commit()
     conn.close()
 
-    return render_template('success.html')
+    return render_template('success.html', company=company_name)
 
 @app.route('/analysis')
 def analysis():
     rows, total, company_data, question_data, suggestions_anon, suggestions_full = get_all_data()
-    
     return render_template(
         'analysis.html',
         total=total,
@@ -141,9 +139,9 @@ def analysis():
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_panel():
     if request.method == 'POST':
-        password = request.form.get('password')
+        entered_password = request.form.get('password', '').strip()
 
-        if password == ADMIN_PASSWORD:
+        if entered_password == ADMIN_PASSWORD:
             rows, total, company_data, question_data, suggestions_anon, suggestions_full = get_all_data()
             return render_template(
                 'admin.html',
@@ -154,7 +152,7 @@ def admin_panel():
         else:
             return render_template(
                 'admin_login.html',
-                error="Wrong Password!"
+                error=f"Wrong Password! You typed: {entered_password}"
             )
 
     return render_template('admin_login.html')
