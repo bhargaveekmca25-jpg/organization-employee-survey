@@ -1,55 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: Arial; background: #f1f5f9; padding: 15px; }
-        .header { background: white; padding: 12px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        table { width: 100%; background: white; border-collapse: collapse; font-size: 11px; border-radius: 8px; overflow: hidden; }
-        th { background: #1e293b; color: white; padding: 8px; text-align: left; }
-        td { padding: 8px; border-bottom: 1px solid #e2e8f0; }
-        tr:hover { background: #f8fafc; }
-        .btn { padding: 6px 10px; border-radius: 4px; text-decoration: none; font-size: 11px; color: white; }
-        .btn-home { background: #334155; }
-        .btn-reset { background: #ef4444; }
-        .wrap { overflow-x: auto; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f1f5f9;
+            padding: 20px;
+        }
+        .header {
+            background: #ffffff;
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .header h4 {
+            color: #1e293b;
+            font-size: 15px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+        .btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+        .btn-home {
+            background: #334155;
+        }
+        .btn-reset {
+            background: #ef4444;
+        }
+        .table-container {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        th {
+            background: #1e293b;
+            color: #ffffff;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            vertical-align: top;
+        }
+        tr:hover {
+            background: #f8fafc;
+        }
+        .section-title {
+            margin: 24px 0 12px 4px;
+            font-size: 14px;
+            color: #1e293b;
+        }
+        .suggestion-card {
+            background: #ffffff;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-size: 12px;
+            border-left: 4px solid #2563eb;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
     </style>
 </head>
 <body>
+
+    <!-- Header -->
     <div class="header">
-        <h4>Admin Panel - Total: {{ total }}</h4>
-        <div>
+        <h4>Admin Panel — Total Responses: {{ total }}</h4>
+        <div class="btn-group">
             <a href="/" class="btn btn-home">Home</a>
-            <a href="/reset" class="btn btn-reset" onclick="return confirm('Sab data delete karna hai?')">Reset</a>
+            <a href="/reset" class="btn btn-reset" onclick="return confirm('Kya sab data delete karna hai?')">Reset Data</a>
         </div>
     </div>
 
-    <div class="wrap">
+    <!-- Table -->
+    <div class="table-container">
         <table>
-            <tr>
-                <th>ID</th><th>Company</th><th>Name</th><th>Dept</th><th>Exp</th><th>Satisfaction</th><th>Work Env</th><th>Suggestion</th>
-            </tr>
-            {% for r in rows %}
-            <tr>
-                <td>{{ r[0] }}</td>
-                <td>{{ r[1] }}</td>
-                <td>{{ r[2] }}</td>
-                <td>{{ r[3] }}</td>
-                <td>{{ r[4] }}</td>
-                <td>{{ r[5] }}</td>
-                <td>{{ r[6] }}</td>
-                <td>{{ r[14] }}</td>
-            </tr>
-            {% endfor %}
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Company</th>
+                    <th>Name</th>
+                    <th>Dept</th>
+                    <th>Exp</th>
+                    <th>Satisfaction</th>
+                    <th>Work Env</th>
+                    <th>Suggestion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rows %}
+                <tr>
+                    <td>{{ r[0] }}</td>
+                    <td>{{ r[1] }}</td>
+                    <td>{{ r[2] }}</td>
+                    <td>{{ r[3] }}</td>
+                    <td>{{ r[4] }}</td>
+                    <td>{{ r[5] }}</td>
+                    <td>{{ r[6] }}</td>
+                    <td>{{ r[14] }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">
+                        No data found yet
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 
-    <h4 style="margin: 15px 0 8px; font-size:13px;">Suggestions with Name</h4>
+    <!-- Suggestions -->
+    <h4 class="section-title">💬 Suggestions with Name</h4>
+
     {% for s in suggestions %}
-        <p style="font-size:11px; background:white; padding:8px; border-radius:5px; margin:4px 0;"><b>{{ s.name }} ({{ s.company }}) - {{ s.department }}:</b> {{ s.suggestion }}</p>
+        <div class="suggestion-card">
+            <b>{{ s.name }} ({{ s.company }} - {{ s.department }}):</b> 
+            {{ s.suggestion }}
+        </div>
+    {% else %}
+        <p style="font-size:12px; color:#94a3b8; margin-left:4px;">No suggestions yet</p>
     {% endfor %}
+
 </body>
 </html>
