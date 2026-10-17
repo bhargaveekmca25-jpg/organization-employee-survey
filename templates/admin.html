@@ -3,154 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Admin Panel - Colourful</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Poppins',sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height:100vh;
+            padding:20px;
         }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f1f5f9;
-            padding: 20px;
+        .header{
+            background: #fff;
+            padding: 18px 22px;
+            border-radius: 18px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom:20px;
+            border: 3px solid #f1f5f9;
         }
-        .header {
-            background: #ffffff;
-            padding: 16px 20px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        .header h2{
+            font-size:18px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight:800;
         }
-        .header h4 {
-            color: #1e293b;
-            font-size: 15px;
+        .total-badge{
+            background: linear-gradient(90deg,#ff6a00,#ee0979);
+            color:white;
+            padding:4px 12px;
+            border-radius:20px;
+            font-size:12px;
+            margin-left:8px;
         }
-        .btn-group {
-            display: flex;
-            gap: 8px;
+        .btn{
+            padding:9px 18px;
+            border-radius:25px;
+            text-decoration:none;
+            font-size:12px;
+            font-weight:700;
+            color:white;
+            display:inline-block;
+            transition:0.3s;
         }
-        .btn {
-            padding: 8px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 12px;
-            color: #ffffff;
-            font-weight: 500;
+        .btn-home{
+            background: linear-gradient(90deg,#36d1dc,#5b86e5);
+            box-shadow: 0 4px 15px rgba(91,134,229,0.4);
         }
-        .btn-home {
-            background: #334155;
+        .btn-reset{
+            background: linear-gradient(90deg,#ff416c,#ff4b2b);
+            box-shadow: 0 4px 15px rgba(255,65,108,0.4);
+            margin-left:8px;
         }
-        .btn-reset {
-            background: #ef4444;
+        .btn:hover{transform:translateY(-2px) scale(1.05)}
+
+        .table-wrap{
+            background:white;
+            border-radius:18px;
+            overflow:hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border: 3px solid white;
         }
-        .table-container {
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            overflow-x: auto;
+        table{width:100%;border-collapse:collapse;font-size:12px}
+        th{
+            padding:14px 10px;
+            text-align:left;
+            color:white;
+            font-weight:700;
+            font-size:11px;
+            letter-spacing:0.5px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
+        th:nth-child(1){background:#ff6a00}
+        th:nth-child(2){background:#ee0979}
+        th:nth-child(3){background:#667eea}
+        th:nth-child(4){background:#764ba2}
+        th:nth-child(5){background:#00b09b}
+        th:nth-child(6){background:#f7971e}
+        th:nth-child(7){background:#11998e}
+        th:nth-child(8){background:#fc4a1a}
+
+        td{padding:12px 10px;border-bottom:1px solid #f1f5f9;font-weight:500}
+        tr:nth-child(even){background:#f8faff}
+        tr:hover{background:#fff7ed;transform:scale(1.01);transition:0.2s}
+
+        .pill{
+            padding:4px 10px;
+            border-radius:20px;
+            font-size:10px;
+            font-weight:800;
+            color:white;
+            white-space:nowrap;
         }
-        th {
-            background: #1e293b;
-            color: #ffffff;
-            padding: 12px 10px;
-            text-align: left;
-            font-weight: 600;
-            white-space: nowrap;
+        .pill-company{background:linear-gradient(90deg,#ff758c,#ff7eb3)}
+        .pill-name{background:linear-gradient(90deg,#667eea,#764ba2);color:white}
+        .pill-dept{background:linear-gradient(90deg,#43cea2,#185a9d)}
+        .pill-exp{background:linear-gradient(90deg,#f7971e,#ffd200);color:#333}
+        .pill-sat{background:linear-gradient(90deg,#00b09b,#96c93d)}
+        .pill-env{background:linear-gradient(90deg,#4facfe,#00f2fe)}
+
+        .s-title{
+            color:white;
+            font-size:16px;
+            font-weight:800;
+            margin:22px 0 12px 5px;
+            text-shadow:0 3px 10px rgba(0,0,0,0.3);
         }
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #e2e8f0;
-            color: #334155;
-            vertical-align: top;
+        .s-card{
+            background:linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+            padding:14px 16px;
+            border-radius:14px;
+            margin:10px 0;
+            box-shadow:0 8px 20px rgba(0,0,0,0.15);
+            border-left:6px solid;
+            font-size:12px;
         }
-        tr:hover {
-            background: #f8fafc;
-        }
-        .section-title {
-            margin: 24px 0 12px 4px;
-            font-size: 14px;
-            color: #1e293b;
-        }
-        .suggestion-card {
-            background: #ffffff;
-            padding: 12px 14px;
-            border-radius: 8px;
-            margin: 8px 0;
-            font-size: 12px;
-            border-left: 4px solid #2563eb;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        .s-card:nth-child(odd){border-left-color:#ff6a00}
+        .s-card:nth-child(even){border-left-color:#667eea}
+        .s-card b{
+            background: linear-gradient(90deg,#667eea,#764ba2);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <div class="header">
-        <h4>Admin Panel — Total Responses: {{ total }}</h4>
-        <div class="btn-group">
-            <a href="/" class="btn btn-home">Home</a>
-            <a href="/reset" class="btn btn-reset" onclick="return confirm('Kya sab data delete karna hai?')">Reset Data</a>
+        <h2>🌈 Admin Panel <span class="total-badge">Total: {{ total }}</span></h2>
+        <div>
+            <a href="/" class="btn btn-home">🏠 Home</a>
+            <a href="/reset" class="btn btn-reset" onclick="return confirm('Delete all data?')">🗑️ Reset</a>
         </div>
     </div>
 
-    <!-- Table -->
-    <div class="table-container">
+    <div class="table-wrap">
+        <div style="overflow-x:auto">
         <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Company</th>
-                    <th>Name</th>
-                    <th>Dept</th>
-                    <th>Exp</th>
-                    <th>Satisfaction</th>
-                    <th>Work Env</th>
-                    <th>Suggestion</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for r in rows %}
-                <tr>
-                    <td>{{ r[0] }}</td>
-                    <td>{{ r[1] }}</td>
-                    <td>{{ r[2] }}</td>
-                    <td>{{ r[3] }}</td>
-                    <td>{{ r[4] }}</td>
-                    <td>{{ r[5] }}</td>
-                    <td>{{ r[6] }}</td>
-                    <td>{{ r[14] }}</td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">
-                        No data found yet
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+            <tr>
+                <th>ID</th>
+                <th>🏢 Company</th>
+                <th>👤 Name</th>
+                <th>Dept</th>
+                <th>Exp</th>
+                <th>😊 Satisfaction</th>
+                <th>🌍 Work Env</th>
+                <th>💬 Suggestion</th>
+            </tr>
+            {% for r in rows %}
+            <tr>
+                <td><span class="pill" style="background:#1e293b">{{ r[0] }}</span></td>
+                <td><span class="pill pill-company">{{ r[1] }}</span></td>
+                <td><span class="pill pill-name">{{ r[2] }}</span></td>
+                <td><span class="pill pill-dept">{{ r[3] }}</span></td>
+                <td><span class="pill pill-exp">{{ r[4] }}</span></td>
+                <td><span class="pill pill-sat">{{ r[5] }}</span></td>
+                <td><span class="pill pill-env">{{ r[6] }}</span></td>
+                <td style="font-weight:700;color:#ee0979">{{ r[14] }}</td>
+            </tr>
+            {% endfor %}
         </table>
+        </div>
     </div>
 
-    <!-- Suggestions -->
-    <h4 class="section-title">💬 Suggestions with Name</h4>
-
+    <div class="s-title">💖 Suggestions with Name</div>
     {% for s in suggestions %}
-        <div class="suggestion-card">
-            <b>{{ s.name }} ({{ s.company }} - {{ s.department }}):</b> 
-            {{ s.suggestion }}
+        <div class="s-card">
+            <b>✨ {{ s.name }}</b> — <span class="pill pill-company">{{ s.company }}</span> <span class="pill pill-dept">{{ s.department }}</span>
+            <div style="margin-top:6px; font-weight:600; color:#334155;">"{{ s.suggestion }}"</div>
         </div>
-    {% else %}
-        <p style="font-size:12px; color:#94a3b8; margin-left:4px;">No suggestions yet</p>
     {% endfor %}
 
 </body>
