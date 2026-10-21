@@ -1,180 +1,305 @@
-from flask import Flask, render_template, request, redirect
-import sqlite3
 import os
-from collections import Counter
+from functools import wraps
+
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    flash
+)
+
+from database import (
+    create_database,
+    insert_response,
+    get_all_responses,
+    delete_all_responses
+)
 
 app = Flask(__name__)
 
-ADMIN_PASSWORD = "admin123"
-DB_NAME = 'survey.db'
+# Secret key for session security
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "local-development-key-change-before-deployment"
+)
 
-def init_db():
-    """Create DB with Unique Name Logic"""
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS feedback (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            company_name TEXT NOT NULL,
-            name TEXT NOT NULL,
-            department TEXT,
-            experience TEXT,
-            job_satisfaction TEXT,
-            work_environment TEXT,
-            communication TEXT,
-            management_support TEXT,
-            training TEXT,
-            career_growth TEXT,
-            resources TEXT,
-            teamwork TEXT,
-            recommend TEXT,
-            suggestions TEXT,
-            UNIQUE(name)
-        )
-    ''')
-    conn.commit()
-    conn.close()
+# Admin credentials
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
-init_db()
+# Organization name
+ORGANIZATION_NAME = "TCS"
 
-def get_all_data():
-    if not os.path.exists(DB_NAME):
-        return [], 0, {}, {}, [], []
 
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    try:
-        c.execute("SELECT * FROM feedback ORDER BY id DESC")
-        rows = c.fetchall()
-    except:
-        rows = []
-    conn.close()
+# Create database during application startup
+create_database()
 
-    total = len(rows)
-    company_data = dict(Counter([r[1] for r in rows if len(r) > 1 and r[1]]))
 
-    question_map = {
-        "Job Satisfaction": 5,
-        "Work Environment": 6,
-        "Communication": 7,
-        "Management Support": 8,
-        "Training": 9,
-        "Career Growth": 10,
-        "Resources": 11,
-        "Teamwork": 12,
-        "Recommend": 13
-    }
+# ADMIN AUTHENTICATION
+def admin_required(function):
 
-    question_data = {}
-    for q_name, idx in question_map.items():
-        vals = [r[idx] for r in rows if len(r) > idx and r[idx]]
-        question_data[q_name] = dict(Counter(vals))
+    @wraps(function)
+    def wrapper(*args, **kwargs):
 
-    suggestions_anon = []
-    suggestions_full = []
-    for r in rows:
-        if len(r) > 14 and r[14] and str(r[14]).strip():
-            suggestions_anon.append({"suggestion": r[14]})
-            suggestions_full.append({
-                "company": r[1],
-                "name": r[2],
-                "department": r[3],
-                "suggestion": r[14]
-            })
+        if not session.get("admin_logged_in"):
+            return redirect(url_for("admin_login"))
 
-    return rows, total, company_data, question_data, suggestions_anon, suggestions_full
+        return function(*args, **kwargs)
 
-@app.route('/')
+    return wrapper
+
+
+# HOME PAGE
+@app.route("/")
 def home():
-    return render_template('index.html')
 
-@app.route('/survey')
+    return render_template("index.html")
+
+
+# EMPLOYEE SURVEY
+@app.route("/survey")
 def survey():
-    return render_template('survey.html')
 
-@app.route('/submit', methods=['POST'])
-def submit():
-    company_name = request.form.get('company_name', '').strip()
-    name = request.form.get('name', '').strip()
-
-    if not company_name or not name:
-        return render_template('success.html', company=company_name, error="Name and Company are required!")
-
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-
-    # LOGIC: Ek employee ek time pe ek hi org me kaam karta hai
-    c.execute("SELECT company_name FROM feedback WHERE LOWER(name) = LOWER(?)", (name,))
-    existing = c.fetchone()
-
-    if existing:
-        conn.close()
-        return render_template(
-            'success.html',
-            company=company_name,
-            error=f"Employee '{name}' already works in '{existing[0]}'. One employee cannot work in multiple organizations at the same time."
-        )
-
-    try:
-        c.execute('''
-            INSERT INTO feedback 
-            (company_name, name, department, experience, job_satisfaction, work_environment, communication, management_support, training, career_growth, resources, teamwork, recommend, suggestions) 
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        ''', (
-            company_name,
-            request.form.get('name'),
-            request.form.get('department'),
-            request.form.get('experience'),
-            request.form.get('job_satisfaction'),
-            request.form.get('work_environment'),
-            request.form.get('communication'),
-            request.form.get('management_support'),
-            request.form.get('training'),
-            request.form.get('career_growth'),
-            request.form.get('resources'),
-            request.form.get('teamwork'),
-            request.form.get('recommend'),
-            request.form.get('suggestions')
-        ))
-        conn.commit()
-    except sqlite3.IntegrityError:
-        conn.close()
-        return render_template(
-            'success.html',
-            company=company_name,
-            error=f"Employee '{name}' already exists in database."
-        )
-
-    conn.close()
-    return render_template('success.html', company=company_name)
-
-@app.route('/analysis')
-def analysis():
-    rows, total, company_data, question_data, suggestions_anon, suggestions_full = get_all_data()
     return render_template(
-        'analysis.html',
-        total=total,
-        company_data=company_data,
-        question_data=question_data,
-        suggestions=suggestions_anon
+        "survey.html",
+        organization_name=ORGANIZATION_NAME
     )
 
-@app.route('/admin', methods=['GET', 'POST'])
-def admin_panel():
-    if request.method == 'POST':
-        if request.form.get('password', '').strip() == ADMIN_PASSWORD:
-            rows, total, company_data, question_data, suggestions_anon, suggestions_full = get_all_data()
-            return render_template('admin.html', rows=rows, total=total, suggestions=suggestions_full)
-        else:
-            return render_template('admin_login.html', error="Wrong Password!")
-    return render_template('admin_login.html')
 
-@app.route('/reset')
+# SUBMIT SURVEY
+@app.route("/submit", methods=["POST"])
+def submit():
+
+    name = request.form.get("name", "").strip()
+    department = request.form.get("department", "").strip()
+    experience = request.form.get("experience", "").strip()
+
+    job_satisfaction = request.form.get(
+        "job_satisfaction", ""
+    )
+
+    work_environment = request.form.get(
+        "work_environment", ""
+    )
+
+    communication = request.form.get(
+        "communication", ""
+    )
+
+    management_support = request.form.get(
+        "management_support", ""
+    )
+
+    training = request.form.get("training", "")
+    career_growth = request.form.get("career_growth", "")
+    resources = request.form.get("resources", "")
+    teamwork = request.form.get("teamwork", "")
+    recommend = request.form.get("recommend", "")
+
+    suggestions = request.form.get(
+        "suggestions", ""
+    ).strip()
+
+    # Validate required fields
+    required_fields = [
+        name,
+        department,
+        experience,
+        job_satisfaction,
+        work_environment,
+        communication,
+        management_support,
+        training,
+        career_growth,
+        resources,
+        teamwork,
+        recommend
+    ]
+
+    if not all(required_fields):
+
+        return (
+            "Please complete all required fields.",
+            400
+        )
+
+    # Save response
+    insert_response(
+        ORGANIZATION_NAME,
+        name,
+        department,
+        experience,
+        job_satisfaction,
+        work_environment,
+        communication,
+        management_support,
+        training,
+        career_growth,
+        resources,
+        teamwork,
+        recommend,
+        suggestions
+    )
+
+    return render_template(
+        "success.html",
+        organization_name=ORGANIZATION_NAME
+    )
+
+
+# ADMIN LOGIN
+@app.route("/admin-login", methods=["GET", "POST"])
+def admin_login():
+
+    if session.get("admin_logged_in"):
+
+        return redirect(url_for("admin"))
+
+    if request.method == "POST":
+
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+
+        if not ADMIN_USERNAME or not ADMIN_PASSWORD:
+
+            return (
+                "Admin credentials are not configured.",
+                500
+            )
+
+        if (
+            username == ADMIN_USERNAME
+            and password == ADMIN_PASSWORD
+        ):
+
+            session.clear()
+            session["admin_logged_in"] = True
+
+            return redirect(url_for("admin"))
+
+        flash("Invalid username or password.")
+
+    return render_template("login.html")
+
+
+# ADMIN DASHBOARD
+@app.route("/admin")
+@admin_required
+def admin():
+
+    responses = get_all_responses()
+
+    return render_template(
+        "admin.html",
+        responses=responses,
+        total=len(responses)
+    )
+
+
+# ANALYSIS DASHBOARD
+@app.route("/analysis")
+@admin_required
+def analysis():
+
+    responses = get_all_responses()
+
+    total = len(responses)
+
+    # Positive satisfaction responses
+    positive = sum(
+        1 for r in responses
+        if r["job_satisfaction"] in [
+            "Very Satisfied",
+            "Satisfied"
+        ]
+    )
+
+    negative = sum(
+        1 for r in responses
+        if r["job_satisfaction"] in [
+            "Dissatisfied",
+            "Very Dissatisfied"
+        ]
+    )
+
+    neutral = sum(
+        1 for r in responses
+        if r["job_satisfaction"] == "Neutral"
+    )
+
+    satisfaction_percentage = (
+        round((positive / total) * 100, 1)
+        if total else 0
+    )
+
+    positive_percentage = (
+        round((positive / total) * 100, 1)
+        if total else 0
+    )
+
+    negative_percentage = (
+        round((negative / total) * 100, 1)
+        if total else 0
+    )
+
+    neutral_percentage = (
+        round((neutral / total) * 100, 1)
+        if total else 0
+    )
+
+    # Department-wise response count
+    departments = {}
+
+    for response in responses:
+
+        department = response["department"]
+
+        departments[department] = (
+            departments.get(department, 0) + 1
+        )
+
+    return render_template(
+        "analysis.html",
+        total=total,
+        positive=positive,
+        negative=negative,
+        neutral=neutral,
+        satisfaction_percentage=satisfaction_percentage,
+        positive_percentage=positive_percentage,
+        negative_percentage=negative_percentage,
+        neutral_percentage=neutral_percentage,
+        departments=departments,
+        responses=responses
+    )
+
+
+# DELETE ALL RESPONSES
+# Admin only; POST request required
+@app.route("/reset", methods=["POST"])
+@admin_required
 def reset():
-    if os.path.exists(DB_NAME):
-        os.remove(DB_NAME)
-    init_db()
-    return redirect('/admin')
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000, debug=True)
+    delete_all_responses()
+
+    flash("All survey responses have been deleted.")
+
+    return redirect(url_for("admin"))
+
+
+# ADMIN LOGOUT
+@app.route("/admin-logout", methods=["POST"])
+@admin_required
+def admin_logout():
+
+    session.clear()
+
+    return redirect(url_for("home"))
+
+
+# RUN APPLICATION
+if __name__ == "__main__":
+
+    app.run(debug=True)
