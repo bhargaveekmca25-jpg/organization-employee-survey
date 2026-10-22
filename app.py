@@ -1,14 +1,12 @@
 import os
-from functools import wraps
-
 from flask import (
     Flask,
     render_template,
     request,
     redirect,
     url_for,
-    session,
-    flash
+    flash,
+    session
 )
 
 from database import (
@@ -18,366 +16,219 @@ from database import (
     delete_all_responses
 )
 
-
-# --------------------------------------------------
-# Flask Application Configuration
-# --------------------------------------------------
-
 app = Flask(__name__)
 
+# Secret key
 app.secret_key = os.environ.get(
     "SECRET_KEY",
-    "employee-survey-local-secret-key"
+    "employee-survey-secret-key"
 )
 
-ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
-print("Admin username configured:", bool(ADMIN_USERNAME))
-print("Admin password configured:", bool(ADMIN_PASSWORD))
+# Organization and admin settings
+ORGANIZATION_NAME = os.environ.get(
+    "ORGANIZATION_NAME",
+    "Organization"
+)
 
-ORGANIZATION_NAME = "Ascent Solutions"
+ADMIN_USERNAME = os.environ.get(
+    "ADMIN_USERNAME", ""
+).strip()
+
+ADMIN_PASSWORD = os.environ.get(
+    "ADMIN_PASSWORD", ""
+)
 
 
-# Create database and required table
+# Create database when the application starts
 create_database()
 
 
-# --------------------------------------------------
-# Admin Authentication Decorator
-# --------------------------------------------------
-
-def admin_required(function):
-    @wraps(function)
-    def wrapper(*args, **kwargs):
-
-        if not session.get("admin_logged_in"):
-            return redirect(url_for("admin_login"))
-
-        return function(*args, **kwargs)
-
-    return wrapper
-
-
-# --------------------------------------------------
-# Home Page
-# --------------------------------------------------
-
+# Home page
 @app.route("/")
-def home():
+def index():
     return render_template("index.html")
 
 
-# --------------------------------------------------
-# Employee Survey Page
-# --------------------------------------------------
-
+# Survey form page
 @app.route("/survey")
 def survey():
-    return render_template(
-        "survey.html",
-        organization_name=ORGANIZATION_NAME
-    )
+    return render_template("survey.html")
 
 
-# --------------------------------------------------
-# Submit Employee Survey
-# --------------------------------------------------
-
+# Submit survey response
 @app.route("/submit", methods=["POST"])
 def submit():
+    try:
+        data = {
+            "company_name": request.form.get(
+                "company_name", ORGANIZATION_NAME
+            ).strip(),
 
-    name = request.form.get("name", "").strip()
-    department = request.form.get("department", "").strip()
-    experience = request.form.get("experience", "").strip()
+            "name": request.form.get("name", "").strip(),
 
-    job_satisfaction = request.form.get(
-        "job_satisfaction", ""
-    ).strip()
+            "department": request.form.get(
+                "department", ""
+            ).strip(),
 
-    work_environment = request.form.get(
-        "work_environment", ""
-    ).strip()
+            "experience": request.form.get(
+                "experience", ""
+            ),
 
-    communication = request.form.get(
-        "communication", ""
-    ).strip()
+            "job_satisfaction": request.form.get(
+                "job_satisfaction", ""
+            ),
 
-    management_support = request.form.get(
-        "management_support", ""
-    ).strip()
+            "work_environment": request.form.get(
+                "work_environment", ""
+            ),
 
-    training = request.form.get(
-        "training", ""
-    ).strip()
+            "communication": request.form.get(
+                "communication", ""
+            ),
 
-    career_growth = request.form.get(
-        "career_growth", ""
-    ).strip()
+            "management_support": request.form.get(
+                "management_support", ""
+            ),
 
-    resources = request.form.get(
-        "resources", ""
-    ).strip()
+            "training": request.form.get(
+                "training", ""
+            ),
 
-    teamwork = request.form.get(
-        "teamwork", ""
-    ).strip()
+            "career_growth": request.form.get(
+                "career_growth", ""
+            ),
 
-    recommend = request.form.get(
-        "recommend", ""
-    ).strip()
+            "resources": request.form.get(
+                "resources", ""
+            ),
 
-    suggestions = request.form.get(
-        "suggestions", ""
-    ).strip()
+            "teamwork": request.form.get(
+                "teamwork", ""
+            ),
 
-    # Validate required fields
-    required_fields = {
-        "Employee Name": name,
-        "Department": department,
-        "Experience": experience,
-        "Job Satisfaction": job_satisfaction,
-        "Work Environment": work_environment,
-        "Communication": communication,
-        "Management Support": management_support,
-        "Training": training,
-        "Career Growth": career_growth,
-        "Resources": resources,
-        "Teamwork": teamwork,
-        "Recommendation": recommend
-    }
+            "recommend": request.form.get(
+                "recommend", ""
+            ),
 
-    missing_fields = [
-        field
-        for field, value in required_fields.items()
-        if not value
-    ]
+            "suggestions": request.form.get(
+                "suggestions", ""
+            )
+        }
 
-    if missing_fields:
-        flash(
-            "Please complete all required survey questions.",
-            "error"
-        )
+        # Save response in the database
+        insert_response(data)
 
+        flash("Survey submitted successfully!")
         return redirect(url_for("survey"))
 
-    # Save response in database
-    try:
-        insert_response(
-            ORGANIZATION_NAME,
-            name,
-            department,
-            experience,
-            job_satisfaction,
-            work_environment,
-            communication,
-            management_support,
-            training,
-            career_growth,
-            resources,
-            teamwork,
-            recommend,
-            suggestions
-        )
-
     except Exception:
-        app.logger.exception("Failed to save survey response")
-
-        return (
-            "Unable to save your response. "
-            "Please check the application logs.",
-            500
-        )
-
-    return render_template(
-        "success.html",
-        organization_name=ORGANIZATION_NAME
-    )
+        app.logger.exception("Error submitting survey")
+        flash("Unable to submit the survey. Please try again.")
+        return redirect(url_for("survey"))
 
 
-# --------------------------------------------------
-# Admin Login Page
-# --------------------------------------------------
-
+# Admin login page
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
-
-    if session.get("admin_logged_in"):
-        return redirect(url_for("admin"))
-
     if request.method == "POST":
 
-        username = request.form.get("username", "")
-        password = request.form.get("password", "")
+        username = request.form.get(
+            "username", ""
+        ).strip()
 
+        password = request.form.get(
+            "password", ""
+        )
+
+        # Check whether environment variables are configured
         if not ADMIN_USERNAME or not ADMIN_PASSWORD:
-            return (
-                "Admin credentials are not configured. "
-                "Set ADMIN_USERNAME and ADMIN_PASSWORD "
-                "in your environment variables.",
-                500
+            app.logger.error(
+                "Admin credentials are missing from environment variables."
             )
 
-        if (
-            username == ADMIN_USERNAME
-            and password == ADMIN_PASSWORD
-        ):
-            session.clear()
+            flash(
+                "Admin login is not configured. "
+                "Please contact the administrator."
+            )
+
+            return render_template("admin_login.html")
+
+        # Compare submitted credentials
+        username_match = username == ADMIN_USERNAME
+        password_match = password == ADMIN_PASSWORD
+
+        # Log comparison results without exposing credentials
+        app.logger.info(
+            "Admin login check: username_match=%s, password_match=%s",
+            username_match,
+            password_match
+        )
+
+        if username_match and password_match:
             session["admin_logged_in"] = True
 
-            return redirect(url_for("admin"))
+            flash("Login successful!")
 
-        flash("Invalid username or password.", "error")
+            return redirect(url_for("admin_dashboard"))
+
+        flash("Invalid username or password.")
 
     return render_template("admin_login.html")
 
 
-# --------------------------------------------------
-# Admin Dashboard
-# --------------------------------------------------
+# Admin dashboard
+@app.route("/admin-dashboard")
+def admin_dashboard():
 
-@app.route("/admin")
-@admin_required
-def admin():
+    if not session.get("admin_logged_in"):
+        flash("Please log in to access the admin dashboard.")
+        return redirect(url_for("admin_login"))
 
-    responses = get_all_responses()
+    try:
+        responses = get_all_responses()
 
-    total = len(responses)
-
-    return render_template(
-        "admin.html",
-        responses=responses,
-        total=total
-    )
-
-
-# --------------------------------------------------
-# Analysis Dashboard
-# --------------------------------------------------
-
-@app.route("/analysis")
-@admin_required
-def analysis():
-
-    responses = get_all_responses()
-
-    total = len(responses)
-
-    positive = 0
-    negative = 0
-    neutral = 0
-
-    departments = {}
-
-    # Analyse employee responses
-    for response in responses:
-
-        satisfaction = response["job_satisfaction"]
-
-        if satisfaction in [
-            "Very Satisfied",
-            "Satisfied"
-        ]:
-            positive += 1
-
-        elif satisfaction in [
-            "Very Dissatisfied",
-            "Dissatisfied"
-        ]:
-            negative += 1
-
-        else:
-            neutral += 1
-
-        # Department-wise response count
-        department = (
-            response["department"] or "Not Specified"
+        return render_template(
+            "admin_dashboard.html",
+            responses=responses
         )
 
-        departments[department] = (
-            departments.get(department, 0) + 1
-        )
-
-    # Calculate percentages
-    if total > 0:
-
-        positive_percentage = round(
-            positive / total * 100, 1
-        )
-
-        negative_percentage = round(
-            negative / total * 100, 1
-        )
-
-        neutral_percentage = round(
-            neutral / total * 100, 1
-        )
-
-    else:
-
-        positive_percentage = 0
-        negative_percentage = 0
-        neutral_percentage = 0
-
-    satisfaction_percentage = positive_percentage
-
-    return render_template(
-        "analysis.html",
-        responses=responses,
-        total=total,
-        positive=positive,
-        negative=negative,
-        neutral=neutral,
-        positive_percentage=positive_percentage,
-        negative_percentage=negative_percentage,
-        neutral_percentage=neutral_percentage,
-        satisfaction_percentage=satisfaction_percentage,
-        departments=departments
-    )
+    except Exception:
+        app.logger.exception("Error loading admin dashboard")
+        flash("Unable to load survey responses.")
+        return redirect(url_for("admin_login"))
 
 
-# --------------------------------------------------
-# Delete All Survey Responses
-# --------------------------------------------------
+# Delete all survey responses
+@app.route("/delete-responses", methods=["POST"])
+def delete_responses():
 
-@app.route("/reset", methods=["POST"])
-@admin_required
-def reset():
+    if not session.get("admin_logged_in"):
+        flash("Please log in first.")
+        return redirect(url_for("admin_login"))
 
     try:
         delete_all_responses()
 
-        flash(
-            "All survey responses have been deleted.",
-            "success"
-        )
+        flash("All survey responses have been deleted.")
 
     except Exception:
-        app.logger.exception("Failed to delete responses")
+        app.logger.exception("Error deleting survey responses")
+        flash("Unable to delete survey responses.")
 
-        flash(
-            "Unable to delete survey responses.",
-            "error"
-        )
-
-    return redirect(url_for("admin"))
+    return redirect(url_for("admin_dashboard"))
 
 
-# --------------------------------------------------
-# Admin Logout
-# --------------------------------------------------
-
-@app.route("/admin-logout", methods=["POST"])
-@admin_required
+# Admin logout
+@app.route("/admin-logout")
 def admin_logout():
 
-    session.clear()
+    session.pop("admin_logged_in", None)
 
-    return redirect(url_for("home"))
+    flash("You have been logged out.")
+
+    return redirect(url_for("admin_login"))
 
 
-# --------------------------------------------------
-# Run Application
-# --------------------------------------------------
-
+# Run application locally
 if __name__ == "__main__":
     app.run(debug=True)
