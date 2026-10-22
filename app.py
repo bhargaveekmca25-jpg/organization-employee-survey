@@ -1,3 +1,4 @@
+
 import os
 
 from flask import (
@@ -20,7 +21,8 @@ from database import (
 
 app = Flask(__name__)
 
-# Application configuration
+# ---------------- CONFIGURATION ----------------
+
 app.secret_key = os.environ.get(
     "SECRET_KEY",
     "employee-survey-secret-key"
@@ -28,10 +30,9 @@ app.secret_key = os.environ.get(
 
 ORGANIZATION_NAME = os.environ.get(
     "ORGANIZATION_NAME",
-    "Organization"
+    "TechNova Solutions Pvt. Ltd."
 )
 
-# Admin credentials from Render environment variables
 ADMIN_USERNAME = os.environ.get(
     "ADMIN_USERNAME", ""
 ).strip()
@@ -41,7 +42,8 @@ ADMIN_PASSWORD = os.environ.get(
 )
 
 
-# Initialize database
+# ---------------- INITIALIZE DATABASE ----------------
+
 create_database()
 
 
@@ -70,54 +72,18 @@ def submit():
             ).strip(),
 
             "name": request.form.get("name", "").strip(),
-
-            "department": request.form.get(
-                "department", ""
-            ).strip(),
-
-            "experience": request.form.get(
-                "experience", ""
-            ),
-
-            "job_satisfaction": request.form.get(
-                "job_satisfaction", ""
-            ),
-
-            "work_environment": request.form.get(
-                "work_environment", ""
-            ),
-
-            "communication": request.form.get(
-                "communication", ""
-            ),
-
-            "management_support": request.form.get(
-                "management_support", ""
-            ),
-
-            "training": request.form.get(
-                "training", ""
-            ),
-
-            "career_growth": request.form.get(
-                "career_growth", ""
-            ),
-
-            "resources": request.form.get(
-                "resources", ""
-            ),
-
-            "teamwork": request.form.get(
-                "teamwork", ""
-            ),
-
-            "recommend": request.form.get(
-                "recommend", ""
-            ),
-
-            "suggestions": request.form.get(
-                "suggestions", ""
-            )
+            "department": request.form.get("department", "").strip(),
+            "experience": request.form.get("experience", "").strip(),
+            "job_satisfaction": request.form.get("job_satisfaction", "").strip(),
+            "work_environment": request.form.get("work_environment", "").strip(),
+            "communication": request.form.get("communication", "").strip(),
+            "management_support": request.form.get("management_support", "").strip(),
+            "training": request.form.get("training", "").strip(),
+            "career_growth": request.form.get("career_growth", "").strip(),
+            "resources": request.form.get("resources", "").strip(),
+            "teamwork": request.form.get("teamwork", "").strip(),
+            "recommend": request.form.get("recommend", "").strip(),
+            "suggestions": request.form.get("suggestions", "").strip()
         }
 
         insert_response(data)
@@ -135,41 +101,23 @@ def submit():
 
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
-
     if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
 
-        username = request.form.get(
-            "username", ""
-        ).strip()
-
-        password = request.form.get(
-            "password", ""
-        )
-
-        # Check environment configuration
         if not ADMIN_USERNAME or not ADMIN_PASSWORD:
             app.logger.error(
                 "Admin credentials are missing from environment variables."
             )
-
             flash("Admin login is not configured.")
             return render_template("admin_login.html")
 
-        # Compare credentials without logging passwords
-        username_match = username == ADMIN_USERNAME
-        password_match = password == ADMIN_PASSWORD
-
-        app.logger.info(
-            "Admin login check: username_match=%s, password_match=%s",
-            username_match,
-            password_match
-        )
-
-        if username_match and password_match:
+        if (
+            username == ADMIN_USERNAME
+            and password == ADMIN_PASSWORD
+        ):
             session["admin_logged_in"] = True
-
             flash("Login successful!")
-
             return redirect(url_for("admin_dashboard"))
 
         flash("Invalid username or password.")
@@ -181,17 +129,18 @@ def admin_login():
 
 @app.route("/admin-dashboard")
 def admin_dashboard():
-
     if not session.get("admin_logged_in"):
         flash("Please log in first.")
         return redirect(url_for("admin_login"))
 
     try:
-        responses = get_all_responses()
+        responses = get_all_responses() or []
+        total = len(responses)
 
         return render_template(
             "admin_dashboard.html",
-            responses=responses
+            responses=responses,
+            total=total
         )
 
     except Exception:
@@ -204,17 +153,18 @@ def admin_dashboard():
 
 @app.route("/analysis")
 def analysis():
-
     if not session.get("admin_logged_in"):
         flash("Please log in to view survey analysis.")
         return redirect(url_for("admin_login"))
 
     try:
-        responses = get_all_responses()
+        responses = get_all_responses() or []
+        total = len(responses)
 
         return render_template(
             "analysis.html",
-            responses=responses
+            responses=responses,
+            total=total
         )
 
     except Exception:
@@ -223,11 +173,10 @@ def analysis():
         return redirect(url_for("admin_dashboard"))
 
 
-# ---------------- DELETE RESPONSES ----------------
+# ---------------- DELETE ALL RESPONSES ----------------
 
 @app.route("/delete-responses", methods=["POST"])
 def delete_responses():
-
     if not session.get("admin_logged_in"):
         flash("Please log in first.")
         return redirect(url_for("admin_login"))
@@ -247,11 +196,8 @@ def delete_responses():
 
 @app.route("/admin-logout")
 def admin_logout():
-
     session.pop("admin_logged_in", None)
-
     flash("You have been logged out.")
-
     return redirect(url_for("admin_login"))
 
 
