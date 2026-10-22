@@ -1,280 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Admin Dashboard</title>
+    <title>Admin Dashboard | Employee Survey</title>
 
-<style>
-* {
-    box-sizing: border-box;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #eef3fb;
-    color: #26364d;
-}
+        body {
+            margin: 0;
+            background: #f1f5f9;
+            color: #172554;
+        }
 
-.header {
-    background: linear-gradient(100deg, #10264f, #174bb4, #285fe0);
-    color: white;
-    padding: 25px 5%;
-}
+        header {
+            background: linear-gradient(110deg, #111c3d, #204bd8);
+            color: white;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
 
-.header h1 {
-    margin: 0 0 8px;
-    font-size: 25px;
-}
+        header h1 {
+            font-size: 23px;
+            margin: 0 0 6px;
+        }
 
-.header p {
-    margin: 0;
-    font-size: 13px;
-    color: #e5edff;
-}
+        header p {
+            font-size: 12px;
+            margin: 0;
+        }
 
-.container {
-    max-width: 1200px;
-    margin: 25px auto;
-    padding: 0 20px;
-}
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
 
-.actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 22px;
-}
+        .nav-links a,
+        .nav-links button {
+            color: white;
+            background: transparent;
+            border: 1px solid #8eb4ff;
+            padding: 10px 13px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            cursor: pointer;
+        }
 
-.button {
-    border: 0;
-    display: inline-block;
-    padding: 11px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 13px;
-    cursor: pointer;
-    font-weight: bold;
-}
+        .nav-links a:hover,
+        .nav-links button:hover {
+            background: #ffffff20;
+        }
 
-.blue {
-    background: #2864dc;
-    color: white;
-}
+        .container {
+            max-width: 1250px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
 
-.grey {
-    background: #475569;
-    color: white;
-}
+        .welcome {
+            margin-bottom: 25px;
+        }
 
-.red {
-    background: #c62828;
-    color: white;
-}
+        .welcome h2 {
+            margin-bottom: 8px;
+            font-size: 25px;
+        }
 
-.stat {
-    background: white;
-    padding: 22px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px #dce5f2;
-    margin-bottom: 25px;
-}
+        .welcome p {
+            color: #64748b;
+            line-height: 1.6;
+        }
 
-.stat h2 {
-    font-size: 14px;
-    color: #65758b;
-    margin-top: 0;
-}
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            border-top: 4px solid #3b82f6;
+            box-shadow: 0 4px 15px #0f172a10;
+            margin-bottom: 25px;
+        }
 
-.stat strong {
-    font-size: 30px;
-    color: #2455bd;
-}
+        .summary-card p {
+            color: #64748b;
+            margin: 0 0 10px;
+            font-size: 14px;
+        }
 
-.table-card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px #dce5f2;
-    overflow-x: auto;
-}
+        .summary-card h2 {
+            color: #2563eb;
+            margin: 0;
+            font-size: 32px;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    min-width: 900px;
-}
+        .message {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
 
-th {
-    background: #eaf2ff;
-    color: #164b9a;
-    text-align: left;
-}
+        .table-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #0f172a10;
+        }
 
-th, td {
-    padding: 12px;
-    border-bottom: 1px solid #e5eaf3;
-    vertical-align: top;
-}
+        .table-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-tr:hover {
-    background: #f7f9fd;
-}
+        .table-heading h2 {
+            font-size: 20px;
+            margin: 0;
+        }
 
-.empty {
-    text-align: center;
-    color: #718096;
-    padding: 25px;
-}
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 11px 15px;
+            cursor: pointer;
+            font-size: 13px;
+        }
 
-.notice {
-    padding: 12px;
-    background: #e4f7eb;
-    color: #17663b;
-    border-radius: 6px;
-    margin-bottom: 15px;
-}
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
 
-.footer {
-    text-align: center;
-    padding: 20px;
-    color: #718096;
-    font-size: 12px;
-}
-</style>
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eff6ff;
+            color: #1e40af;
+            white-space: nowrap;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 35px 15px;
+            color: #64748b;
+            background: #f8fafc;
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 18px;
+            background: #111827;
+            color: white;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 16px;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .welcome h2 {
+                font-size: 22px;
+            }
+
+            .table-card {
+                padding: 14px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="header">
+<header>
+    <div>
+        <h1>📊 Admin Dashboard</h1>
+        <p>Employee Survey Management System</p>
+    </div>
 
-    <h1>🔐 Admin Dashboard</h1>
+    <nav class="nav-links">
+        <a href="{{ url_for('home') }}">Home</a>
 
-    <p>Employee Survey Form Analysis System</p>
+        <a href="{{ url_for('analysis') }}">
+            📈 Analysis Dashboard
+        </a>
 
-</div>
+        <form action="{{ url_for('admin_logout') }}"
+              method="POST"
+              style="display:inline;">
 
-<div class="container">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+        <h2>Welcome, Administrator!</h2>
+
+        <p>
+            View employee survey submissions and review the feedback
+            collected through the Employee Survey Form Analysis System.
+        </p>
+    </section>
 
     {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            <div class="notice">{{ message }}</div>
-        {% endfor %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
     {% endwith %}
 
-    <div class="actions">
+    <section class="summary-card">
+        <p>Total Survey Responses</p>
+        <h2>{{ total }}</h2>
+    </section>
 
-        <a href="{{ url_for('analysis') }}" class="button blue">
-            📊 View Analysis Dashboard
-        </a>
+    <section class="table-card">
 
-        <a href="{{ url_for('home') }}" class="button grey">
-            Home
-        </a>
+        <div class="table-heading">
+            <h2>Employee Survey Responses</h2>
 
-        <form action="{{ url_for('admin_logout') }}" method="POST">
-            <button type="submit" class="button grey">
-                Logout
-            </button>
-        </form>
+            {% if total > 0 %}
+            <form action="{{ url_for('reset') }}"
+                  method="POST"
+                  onsubmit="return confirm('Are you sure you want to permanently delete ALL survey responses? This action cannot be undone.');">
 
-    </div>
-
-    <div class="stat">
-
-        <h2>Total Survey Responses</h2>
-
-        <strong>{{ total }}</strong>
-
-    </div>
-
-    <div class="table-card">
-
-        <h2>Employee Responses</h2>
-
-        <br>
+                <button type="submit" class="delete-btn">
+                    Delete All Responses
+                </button>
+            </form>
+            {% endif %}
+        </div>
 
         {% if responses %}
 
-        <table>
+        <div class="table-wrapper">
 
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Employee Name</th>
-                    <th>Department</th>
-                    <th>Experience</th>
-                    <th>Job Satisfaction</th>
-                    <th>Work Environment</th>
-                    <th>Communication</th>
-                    <th>Management Support</th>
-                    <th>Training</th>
-                    <th>Career Growth</th>
-                    <th>Resources</th>
-                    <th>Teamwork</th>
-                    <th>Recommendation</th>
-                    <th>Suggestions</th>
-                </tr>
-            </thead>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Organization</th>
+                        <th>Employee Name</th>
+                        <th>Department</th>
+                        <th>Experience</th>
+                        <th>Job Satisfaction</th>
+                        <th>Work Environment</th>
+                        <th>Communication</th>
+                        <th>Management Support</th>
+                        <th>Training</th>
+                        <th>Career Growth</th>
+                        <th>Resources</th>
+                        <th>Teamwork</th>
+                        <th>Recommendation</th>
+                        <th>Suggestions</th>
+                    </tr>
+                </thead>
 
-            <tbody>
+                <tbody>
+                    {% for response in responses %}
+                    <tr>
+                        <td>{{ response["id"] }}</td>
+                        <td>{{ response["company_name"] }}</td>
+                        <td>{{ response["name"] }}</td>
+                        <td>{{ response["department"] }}</td>
+                        <td>{{ response["experience"] }}</td>
+                        <td>{{ response["job_satisfaction"] }}</td>
+                        <td>{{ response["work_environment"] }}</td>
+                        <td>{{ response["communication"] }}</td>
+                        <td>{{ response["management_support"] }}</td>
+                        <td>{{ response["training"] }}</td>
+                        <td>{{ response["career_growth"] }}</td>
+                        <td>{{ response["resources"] }}</td>
+                        <td>{{ response["teamwork"] }}</td>
+                        <td>{{ response["recommend"] }}</td>
+                        <td>{{ response["suggestions"] or "-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-                {% for r in responses %}
-
-                <tr>
-                    <td>{{ r["id"] }}</td>
-                    <td>{{ r["name"] }}</td>
-                    <td>{{ r["department"] }}</td>
-                    <td>{{ r["experience"] }}</td>
-                    <td>{{ r["job_satisfaction"] }}</td>
-                    <td>{{ r["work_environment"] }}</td>
-                    <td>{{ r["communication"] }}</td>
-                    <td>{{ r["management_support"] }}</td>
-                    <td>{{ r["training"] }}</td>
-                    <td>{{ r["career_growth"] }}</td>
-                    <td>{{ r["resources"] }}</td>
-                    <td>{{ r["teamwork"] }}</td>
-                    <td>{{ r["recommend"] }}</td>
-                    <td>{{ r["suggestions"] or "-" }}</td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
+        </div>
 
         {% else %}
 
-        <p class="empty">
-            No employee survey responses have been submitted yet.
-        </p>
+        <div class="empty-message">
+            <h3>No Survey Responses Yet</h3>
+
+            <p>
+                Employee submissions will appear here after a survey
+                form has been completed.
+            </p>
+
+            <a href="{{ url_for('survey') }}">
+                Open Employee Survey
+            </a>
+        </div>
 
         {% endif %}
 
-    </div>
+    </section>
 
-    <br>
+</main>
 
-    <form action="{{ url_for('reset') }}"
-          method="POST"
-          onsubmit="return confirm('Are you sure you want to delete ALL survey responses? This cannot be undone.');">
-
-        <button type="submit" class="button red">
-            Delete All Responses
-        </button>
-
-    </form>
-
-</div>
-
-<div class="footer">
-    Employee Survey Form Analysis System
-</div>
+<footer>
+    © 2026 Employee Survey Analysis System
+</footer>
 
 </body>
 </html>
