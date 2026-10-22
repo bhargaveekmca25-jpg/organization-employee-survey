@@ -1,244 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Employee Survey System</title>
+    <title>Employee Feedback Survey</title>
 
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
 
-body {
-    font-family: Arial, sans-serif;
-    background: #eef3fb;
-    color: #26364d;
-}
+        body {
+            background: #f1f5f9;
+            color: #172554;
+        }
 
-.navbar {
-    background: linear-gradient(100deg, #10264f, #174bb4, #285fe0);
-    color: white;
-    padding: 18px 6%;
-    font-size: 18px;
-    font-weight: bold;
-}
+        /* Header */
+        header {
+            background: linear-gradient(110deg, #111c3d, #204bd8);
+            color: white;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
 
-.navbar small {
-    display: block;
-    margin-top: 5px;
-    font-size: 11px;
-    font-weight: normal;
-    color: #dbe7ff;
-}
+        .brand h2 {
+            font-size: 21px;
+            margin-bottom: 5px;
+        }
 
-.hero {
-    background: linear-gradient(120deg, #172c55, #2455bd, #376be5);
-    color: white;
-    text-align: center;
-    padding: 65px 20px;
-}
+        .brand p {
+            font-size: 12px;
+            color: #dbeafe;
+        }
 
-.hero h1 {
-    font-size: 30px;
-    margin: 12px 0;
-}
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-.hero p {
-    max-width: 600px;
-    margin: 0 auto 25px;
-    line-height: 1.8;
-    color: #e5edff;
-    font-size: 14px;
-}
+        .nav-links a {
+            color: white;
+            border: 1px solid #8eb4ff;
+            padding: 11px 14px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            white-space: nowrap;
+        }
 
-.button {
-    display: inline-block;
-    background: white;
-    color: #2055bd;
-    text-decoration: none;
-    padding: 13px 25px;
-    border-radius: 6px;
-    font-weight: bold;
-}
+        .nav-links a:hover {
+            background: #ffffff20;
+        }
 
-.section {
-    padding: 40px 20px;
-    text-align: center;
-    max-width: 1050px;
-    margin: auto;
-}
+        /* Hero section */
+        .hero {
+            min-height: 330px;
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #172554, #3867e8);
+        }
 
-.section h2 {
-    margin-bottom: 12px;
-}
+        .hero-icon {
+            font-size: 43px;
+            margin-bottom: 15px;
+        }
 
-.description {
-    color: #718096;
-    font-size: 13px;
-    margin-bottom: 25px;
-    line-height: 1.7;
-}
+        .hero h1 {
+            font-size: 34px;
+            margin-bottom: 16px;
+        }
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
+        .hero p {
+            max-width: 620px;
+            margin: 0 auto 27px;
+            line-height: 1.8;
+            font-size: 15px;
+            color: #e0e7ff;
+        }
 
-.card {
-    background: white;
-    padding: 28px 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px #dce5f2;
-}
+        .start-btn {
+            display: inline-block;
+            background: white;
+            color: #2454d8;
+            text-decoration: none;
+            padding: 14px 25px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
 
-.card .icon {
-    font-size: 30px;
-    margin-bottom: 12px;
-}
+        .start-btn:hover {
+            background: #dbeafe;
+        }
 
-.card h3 {
-    margin-bottom: 12px;
-    font-size: 16px;
-}
+        /* Common sections */
+        .section {
+            padding: 45px 20px;
+            text-align: center;
+        }
 
-.card p {
-    font-size: 13px;
-    color: #718096;
-    line-height: 1.7;
-}
+        .section h2 {
+            margin-bottom: 12px;
+            font-size: 25px;
+            color: #172554;
+        }
 
-.steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-}
+        .section-subtitle {
+            color: #64748b;
+            margin-bottom: 28px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
 
-.step {
-    background: white;
-    padding: 22px 12px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px #dce5f2;
-}
+        /* Information cards */
+        .cards {
+            max-width: 950px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
 
-.step strong {
-    display: flex;
-    width: 35px;
-    height: 35px;
-    background: #2864dc;
-    color: white;
-    border-radius: 50%;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 12px;
-}
+        .card {
+            background: white;
+            padding: 27px 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px #0f172a12;
+        }
 
-.step h3 {
-    font-size: 14px;
-    margin-bottom: 8px;
-}
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
 
-.step p {
-    font-size: 12px;
-    color: #718096;
-    line-height: 1.6;
-}
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
 
-.footer {
-    background: #101c35;
-    color: #d9e2f3;
-    text-align: center;
-    padding: 18px;
-    font-size: 12px;
-}
+        .card p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.8;
+        }
 
-@media (max-width: 700px) {
-    .cards {
-        grid-template-columns: 1fr;
-    }
+        /* How it works */
+        .steps {
+            max-width: 950px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
 
-    .steps {
-        grid-template-columns: repeat(2, 1fr);
-    }
+        .step {
+            background: white;
+            padding: 24px 15px;
+            border-radius: 11px;
+            box-shadow: 0 4px 14px #0f172a10;
+        }
 
-    .hero h1 {
-        font-size: 24px;
-    }
-}
+        .step-number {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 13px;
+            font-weight: bold;
+        }
 
-@media (max-width: 450px) {
-    .steps {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
+        .step h3 {
+            font-size: 15px;
+            margin-bottom: 9px;
+        }
+
+        .step p {
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            background: #111827;
+            color: white;
+            text-align: center;
+            padding: 19px;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 750px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                width: 100%;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .nav-links a {
+                font-size: 12px;
+                padding: 9px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<nav class="navbar">
-    📊 Employee Survey System
-    <small>Employee Feedback and Analysis Platform</small>
-</nav>
+<!-- HEADER -->
+<header>
 
+    <div class="brand">
+        <h2>📊 Survey Analysis System</h2>
+        <p>Employee Feedback &amp; Analysis Platform</p>
+    </div>
+
+    <nav class="nav-links">
+
+        <a href="{{ url_for('admin_login') }}">
+            🔐 Admin Dashboard
+        </a>
+
+        <a href="{{ url_for('analysis') }}">
+            📈 Analysis Dashboard
+        </a>
+
+    </nav>
+
+</header>
+
+
+<!-- HERO SECTION -->
 <section class="hero">
 
-    <div style="font-size:36px;">📋</div>
+    <div class="hero-icon">📝</div>
 
     <h1>Employee Feedback Survey</h1>
 
     <p>
-        Share your valuable feedback about your workplace.
-        Your responses help the organization understand employee
-        satisfaction and identify areas for improvement.
+        Your feedback matters! Help us understand employee satisfaction,
+        workplace environment, communication and opportunities for growth.
+        Your valuable feedback helps identify areas for improvement.
     </p>
 
-    <a href="{{ url_for('survey') }}" class="button">
-        Start Survey →
+    <a class="start-btn" href="{{ url_for('survey') }}">
+        Start Employee Survey →
     </a>
 
 </section>
 
+
+<!-- ABOUT SECTION -->
 <section class="section">
 
     <h2>About the System</h2>
 
-    <p class="description">
-        A platform to collect employee feedback and support
-        workplace improvement.
+    <p class="section-subtitle">
+        A simple platform to collect, store and analyze employee feedback.
     </p>
 
     <div class="cards">
 
         <div class="card">
-            <div class="icon">📝</div>
+            <div class="card-icon">📝</div>
+
             <h3>Employee Survey</h3>
+
             <p>
-                Employees can share their opinions about job
-                satisfaction, management and teamwork.
+                Employees can share their opinions about job satisfaction,
+                work environment, management support and teamwork.
             </p>
         </div>
 
         <div class="card">
-            <div class="icon">🗄️</div>
-            <h3>Data Storage</h3>
+            <div class="card-icon">🗄️</div>
+
+            <h3>Data Management</h3>
+
             <p>
-                Responses are stored in a database for organized
-                retrieval and review.
+                Survey responses are stored in a database so that
+                administrators can review the collected information.
             </p>
         </div>
 
         <div class="card">
-            <div class="icon">📊</div>
-            <h3>Analysis and Reports</h3>
+            <div class="card-icon">📊</div>
+
+            <h3>Analysis &amp; Reports</h3>
+
             <p>
-                Survey responses are summarized to identify
-                employee feedback trends.
+                Feedback can be analyzed through charts, satisfaction
+                statistics and question-wise response summaries.
             </p>
         </div>
 
@@ -246,46 +331,52 @@ body {
 
 </section>
 
+
+<!-- HOW IT WORKS -->
 <section class="section">
 
     <h2>How It Works</h2>
 
-    <p class="description">
-        Four simple steps to share your feedback.
+    <p class="section-subtitle">
+        Four simple steps to collect and analyze employee feedback.
     </p>
 
     <div class="steps">
 
         <div class="step">
-            <strong>1</strong>
+            <div class="step-number">1</div>
             <h3>Fill Survey</h3>
-            <p>Enter employee details and answer questions.</p>
+            <p>Employees complete the feedback form.</p>
         </div>
 
         <div class="step">
-            <strong>2</strong>
-            <h3>Submit Data</h3>
-            <p>Submit the completed feedback form.</p>
+            <div class="step-number">2</div>
+            <h3>Submit Feedback</h3>
+            <p>Completed responses are submitted to the system.</p>
         </div>
 
         <div class="step">
-            <strong>3</strong>
-            <h3>Data Analysis</h3>
-            <p>Responses are stored for analysis.</p>
+            <div class="step-number">3</div>
+            <h3>Analyze Data</h3>
+            <p>Responses are summarized for analysis.</p>
         </div>
 
         <div class="step">
-            <strong>4</strong>
-            <h3>Reports</h3>
-            <p>Authorized administrators review reports.</p>
+            <div class="step-number">4</div>
+            <h3>View Reports</h3>
+            <p>Authorized administrators review survey results.</p>
         </div>
 
     </div>
 
 </section>
 
-<footer class="footer">
+
+<!-- FOOTER -->
+<footer>
     © 2026 Employee Survey Form Analysis System
+    <br>
+    Employee Feedback &amp; Analysis Platform
 </footer>
 
 </body>
