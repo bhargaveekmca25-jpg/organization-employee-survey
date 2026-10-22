@@ -32,8 +32,10 @@ app.secret_key = os.environ.get(
 
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+print("Admin username configured:", bool(ADMIN_USERNAME))
+print("Admin password configured:", bool(ADMIN_PASSWORD))
 
-ORGANIZATION_NAME = "TCS"
+ORGANIZATION_NAME = "Ascent Solutions"
 
 
 # Create database and required table
