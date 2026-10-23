@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial}
+body{background:#eef2f7}
+.header{background:linear-gradient(90deg,#0d1e42,#2148c7);color:white;padding:10px 18px;display:flex;justify-content:space-between;align-items:center}
+.header a{color:white;text-decoration:none;border:1px solid #7aa0ff;padding:5px 10px;border-radius:6px;font-size:10px;margin-left:6px;background:#ffffff22}
+.wrap{max-width:1050px;margin:16px auto;padding:0 14px}
+.top3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.card{background:white;border-radius:8px;padding:12px 14px;box-shadow:0 2px 8px #0001;border-left:3px solid #2563eb}
+.card span{font-size:9px;color:#64748b}.card b{font-size:18px;color:#2563eb;display:block;margin-top:4px}
+.main-box{background:white;border-radius:10px;padding:14px;box-shadow:0 4px 12px #0001}
+.table-wrap{overflow:auto} table{width:100%;border-collapse:collapse;min-width:1100px}
+th{background:#1e3a8a;color:white;font-size:8.5px;padding:8px 6px;text-align:left} td{font-size:9px;padding:8px 6px;border-bottom:1px solid #f1f5f9}
+.btn{padding:8px 12px;border-radius:6px;font-size:10px;font-weight:600;text-decoration:none;display:inline-block}
+.btn-blue{background:#2563eb;color:white}.btn-dark{background:#334155;color:white}.btn-red{background:#dc2626;color:white}
+</style></head>
+<body>
+<div class="header"><div><h3>🛡️ Admin Dashboard</h3><p style="font-size:9px;color:#a8bfff">Survey Responses Management</p></div><div><a href="/">🏠 Home</a><a href="/analysis">📊 Analysis</a></div></div>
+<div class="wrap">
+<div class="top3"><div class="card"><span>Total Responses</span><b>{{ total }}</b></div><div class="card"><span>Database</span><b style="font-size:15px">SQLite</b></div><div class="card"><span>Status</span><b style="font-size:15px">Active</b></div></div>
+<div class="main-box">
+<h4 style="font-size:13px;margin-bottom:10px">📋 Employee Responses</h4>
+<div class="table-wrap"><table><tr><th>ID</th><th>Name</th><th>Company</th><th>Department</th><th>Experience</th><th>Job Sat</th><th>Work Env</th><th>Comm</th><th>Mgmt</th><th>Training</th><th>Growth</th><th>Resources</th><th>Teamwork</th><th>Recommend</th><th>Suggestion</th></tr>
+{% for r in responses %}<tr><td>{{ r['id'] }}</td><td>{{ r['employee_name'] }}</td><td>{{ r['company'] }}</td><td>{{ r['department'] }}</td><td>{{ r['experience'] }}</td><td>{{ r['q1'] }}</td><td>{{ r['q2'] }}</td><td>{{ r['q3'] }}</td><td>{{ r['q4'] }}</td><td>{{ r['q5'] }}</td><td>{{ r['q6'] }}</td><td>{{ r['q7'] }}</td><td>{{ r['q8'] }}</td><td>{{ r['q9'] }}</td><td>{{ r['suggestion'] }}</td></tr>{% endfor %}
+</table></div>
+<div style="margin-top:14px;display:flex;gap:8px"><a href="/analysis" class="btn btn-blue">📊 View Analysis</a><a href="/" class="btn btn-dark">🏠 Back to Home</a><a href="/reset-all" class="btn btn-red" onclick="return confirm('Delete all?')">🗑️ Reset All Responses</a></div>
+</div></div>
+</body></html>

@@ -1,80 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Survey Submitted</title>
-
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You - Ascent Solutions</title>
 <style>
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background: #eef3fb;
-    padding: 20px;
-}
-
-.card {
-    background: white;
-    width: 100%;
-    max-width: 600px;
-    padding: 40px 25px;
-    border-radius: 14px;
-    box-shadow: 0 8px 30px #d9e2ef;
-    text-align: center;
-}
-
-.icon {
-    color: #20a464;
-    font-size: 55px;
-}
-
-h1 {
-    color: #239653;
-    font-size: 25px;
-}
-
-p {
-    color: #65758b;
-    line-height: 1.7;
-}
-
-a {
-    display: inline-block;
-    margin-top: 15px;
-    background: #2864dc;
-    color: white;
-    text-decoration: none;
-    padding: 12px 22px;
-    border-radius: 6px;
-    font-weight: bold;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial}
+body{background:#f1f5f9;min-height:100vh;display:grid;place-items:center;padding:20px}
+.box{background:white;padding:40px 32px;border-radius:16px;box-shadow:0 8px 30px #0001;text-align:center;max-width:500px;width:100%}
+.icon{font-size:36px;margin-bottom:12px}
+h1{font-size:26px;margin-bottom:8px}
+p{font-size:14px;color:#475569;margin-bottom:22px;line-height:1.6}
+.home-btn{display:inline-block;background:#2563eb;color:white;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:14px}
+.home-btn:hover{background:#1d4ed8}
+small{display:block;margin-top:18px;font-size:11px;color:#94a3b8}
 </style>
 </head>
-
 <body>
-
-<div class="card">
-
-    <div class="icon">✓</div>
-
-    <h1>Survey Submitted Successfully!</h1>
-
-    <p>
-        Thank you for submitting your feedback to
-        {{ organization_name }}.
-    </p>
-
-    <p>Your response has been recorded.</p>
-
-    <a href="{{ url_for('home') }}">Back to Home</a>
-
+<div class="box">
+<div class="icon">✅</div>
+<h1>Thank You!</h1>
+<p>Your feedback for <b>Ascent Solutions</b> has been submitted.</p>
+<a href="/" class="home-btn">HOME</a>
+<small>© 2026 Ascent Solutions - Confidential Feedback</small>
 </div>
-
 </body>
 </html>

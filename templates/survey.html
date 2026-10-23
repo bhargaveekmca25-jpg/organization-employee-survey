@@ -1,740 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Survey - Ascent Solutions</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial}
+body{background:#f1f5f9;color:#172554}
+.header{background:linear-gradient(100deg,#0f1a3d,#2548c8);color:white;padding:16px;text-align:center}
+.container{max-width:700px;margin:18px auto;background:white;border-radius:10px;box-shadow:0 4px 20px #0001;padding:20px 22px}
+.sec-head{background:#0f172a;color:white;padding:10px 12px;border-radius:6px;font-size:13px;font-weight:700;margin:22px 0 10px}
+label.main{font-size:11px;font-weight:700;display:block;margin:12px 0 5px} 
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:7px;font-size:12.5px}
+.company-field{background:#e0f2fe!important;font-weight:700;border-color:#7dd3fc!important}
+.q-title{background:#eff6ff;border-left:3px solid #2563eb;padding:8px 10px;border-radius:4px;font-size:12px;font-weight:700;margin:18px 0 10px;color:#1e293b}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-    <title>Employee Feedback Survey</title>
+/* PROPER LEFT SIDE ALIGNMENT FIX */
+.opt{
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:12px;
+  font-size:12px;
+  cursor:pointer;
+  background:white;
+  text-align:left;
+  line-height:1.3;
+}
+.opt input[type="radio"]{
+  width:16px;
+  height:16px;
+  margin:0;
+  flex-shrink:0;
+  accent-color:#2563eb;
+}
+.opt:hover{border-color:#3b82f6;background:#f8fafc}
+.opt:has(input:checked){border-color:#2563eb;background:#eff6ff;color:#1e3a8a;font-weight:600}
 
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            padding: 22px;
-            background: #f1f5f9;
-            color: #172554;
-        }
-
-        .form-container {
-            max-width: 950px;
-            margin: auto;
-            background: white;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 5px 22px #0f172a14;
-        }
-
-        /* Blue header */
-        .form-header {
-            background: linear-gradient(110deg, #111c3d, #204bd8);
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-        }
-
-        .form-icon {
-            font-size: 38px;
-            margin-bottom: 12px;
-        }
-
-        .form-header h1 {
-            font-size: 28px;
-            margin: 0 0 10px;
-        }
-
-        .form-header p {
-            margin: 0;
-            font-size: 14px;
-            color: #dbeafe;
-            line-height: 1.7;
-        }
-
-        /* Organization name */
-        .organization-banner {
-            background: #eff6ff;
-            border-bottom: 1px solid #bfdbfe;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .organization-label {
-            color: #64748b;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 7px;
-        }
-
-        .organization-name {
-            font-size: 25px;
-            font-weight: bold;
-            color: #1d4ed8;
-            overflow-wrap: anywhere;
-        }
-
-        .organization-caption {
-            margin-top: 7px;
-            font-size: 13px;
-            color: #475569;
-        }
-
-        form {
-            padding: 28px;
-        }
-
-        /* Section headings */
-        .section-heading {
-            background: #eff6ff;
-            border-left: 5px solid #2563eb;
-            border-radius: 7px;
-            padding: 13px 16px;
-            margin: 8px 0 20px;
-            font-size: 18px;
-            color: #1e3a8a;
-        }
-
-        .notice {
-            background: #fffbeb;
-            border: 1px solid #fcd34d;
-            color: #854d0e;
-            padding: 13px;
-            border-radius: 7px;
-            font-size: 13px;
-            line-height: 1.7;
-            margin-bottom: 22px;
-        }
-
-        .field {
-            margin-bottom: 19px;
-        }
-
-        .field-label {
-            display: block;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 9px;
-        }
-
-        .required {
-            color: #dc2626;
-        }
-
-        input[type="text"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 13px;
-            border: 1px solid #cbd5e1;
-            border-radius: 7px;
-            font-size: 14px;
-            color: #172554;
-            background: white;
-        }
-
-        input[readonly] {
-            background: #eff6ff;
-            color: #1d4ed8;
-            font-weight: bold;
-        }
-
-        select:focus,
-        input:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px #3b82f620;
-        }
-
-        /* Questions */
-        .question {
-            margin-bottom: 26px;
-        }
-
-        .question-title {
-            display: block;
-            font-weight: bold;
-            font-size: 14px;
-            line-height: 1.7;
-            margin-bottom: 12px;
-        }
-
-        .options {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            border: 1px solid #dbeafe;
-            background: #f8fafc;
-            border-radius: 7px;
-            font-size: 13px;
-            cursor: pointer;
-            line-height: 1.5;
-        }
-
-        .option:hover {
-            background: #eff6ff;
-            border-color: #60a5fa;
-        }
-
-        .option input {
-            accent-color: #2563eb;
-            flex-shrink: 0;
-        }
-
-        textarea {
-            min-height: 115px;
-            resize: vertical;
-        }
-
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        .submit-btn:hover {
-            background: #1d4ed8;
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #2563eb;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        footer {
-            background: #111827;
-            color: white;
-            text-align: center;
-            padding: 17px;
-            font-size: 12px;
-            line-height: 1.7;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 8px;
-            }
-
-            .form-header {
-                padding: 25px 15px;
-            }
-
-            .form-header h1 {
-                font-size: 23px;
-            }
-
-            .organization-name {
-                font-size: 22px;
-            }
-
-            form {
-                padding: 17px;
-            }
-
-            .options {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-
+.submit{width:100%;margin-top:24px;background:#2563eb;color:white;border:none;padding:13px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
+.submit:hover{background:#1d4ed8}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}.container{margin:0;border-radius:0;padding:16px}}
+</style></head>
 <body>
+<div class="header"><h2>Employee Feedback Survey</h2><p>Feedback collected for Ascent Solutions</p></div>
+<div class="container">
+<form action="/submit" method="POST">
 
-<div class="form-container">
+<div class="sec-head">Section 1: Employee Information</div>
+<label class="main">1. Company *</label><input name="company" class="company-field" value="Ascent Solutions" readonly>
+<label class="main">2. Employee Name: Enter your full name *</label><input name="employee_name" required placeholder="Enter your full name">
+<label class="main">3. Department: Which department do you work in? *</label>
+<select name="department" required><option value="">Select Department</option><option>Human Resources</option><option>IT</option><option>Finance</option><option>Marketing</option><option>Sales</option><option>Other</option></select>
+<label class="main">4. Work Experience: How long have you been working? *</label>
+<select name="experience" required><option value="">Select Experience</option><option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option><option>More than 5 years</option></select>
 
-    <!-- FORM HEADER -->
-    <header class="form-header">
+<div class="sec-head">Section 2: Employee Feedback</div>
 
-        <div class="form-icon">📋</div>
+<div class="q-title">5. Job Satisfaction: How satisfied are you with your current job? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q1" value="Very Satisfied" required> Very Satisfied</label><label class="opt"><input type="radio" name="q1" value="Satisfied"> Satisfied</label><label class="opt"><input type="radio" name="q1" value="Neutral"> Neutral</label><label class="opt"><input type="radio" name="q1" value="Dissatisfied"> Dissatisfied</label><label class="opt"><input type="radio" name="q1" value="Very Dissatisfied"> Very Dissatisfied</label></div>
 
-        <h1>Employee Feedback Survey</h1>
+<div class="q-title">6. Work Environment: How would you rate your workplace environment? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q2" value="Very Satisfied" required> Very Satisfied</label><label class="opt"><input type="radio" name="q2" value="Satisfied"> Satisfied</label><label class="opt"><input type="radio" name="q2" value="Neutral"> Neutral</label><label class="opt"><input type="radio" name="q2" value="Dissatisfied"> Dissatisfied</label><label class="opt"><input type="radio" name="q2" value="Very Dissatisfied"> Very Dissatisfied</label></div>
 
-        <p>
-            Employee Feedback &amp; Analysis System
-        </p>
+<div class="q-title">7. Communication: How satisfied are you with communication between employees and management? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q3" value="Very Satisfied" required> Very Satisfied</label><label class="opt"><input type="radio" name="q3" value="Satisfied"> Satisfied</label><label class="opt"><input type="radio" name="q3" value="Neutral"> Neutral</label><label class="opt"><input type="radio" name="q3" value="Dissatisfied"> Dissatisfied</label><label class="opt"><input type="radio" name="q3" value="Very Dissatisfied"> Very Dissatisfied</label></div>
 
-    </header>
+<div class="q-title">8. Management Support: Are you satisfied with the support provided by management? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q4" value="Very Satisfied" required> Very Satisfied</label><label class="opt"><input type="radio" name="q4" value="Satisfied"> Satisfied</label><label class="opt"><input type="radio" name="q4" value="Neutral"> Neutral</label><label class="opt"><input type="radio" name="q4" value="Dissatisfied"> Dissatisfied</label><label class="opt"><input type="radio" name="q4" value="Very Dissatisfied"> Very Dissatisfied</label></div>
 
+<div class="q-title">9. Training and Development: Are you satisfied with the training opportunities? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q5" value="Very Satisfied" required> Very Satisfied</label><label class="opt"><input type="radio" name="q5" value="Satisfied"> Satisfied</label><label class="opt"><input type="radio" name="q5" value="Neutral"> Neutral</label><label class="opt"><input type="radio" name="q5" value="Dissatisfied"> Dissatisfied</label><label class="opt"><input type="radio" name="q5" value="Very Dissatisfied"> Very Dissatisfied</label></div>
 
-    <!-- ORGANIZATION NAME AT TOP -->
-    <section class="organization-banner">
+<div class="q-title">10. Career Growth: Are you satisfied with your career growth opportunities? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q6" value="Very Satisfied" required> Very Satisfied</label><label class="opt"><input type="radio" name="q6" value="Satisfied"> Satisfied</label><label class="opt"><input type="radio" name="q6" value="Neutral"> Neutral</label><label class="opt"><input type="radio" name="q6" value="Dissatisfied"> Dissatisfied</label><label class="opt"><input type="radio" name="q6" value="Very Dissatisfied"> Very Dissatisfied</label></div>
 
-        <div class="organization-label">
-            Feedback Collected For
-        </div>
+<div class="q-title">11. Work Resources: Are you provided with the tools and resources needed? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q7" value="Very Satisfied" required> Very Satisfied</label><label class="opt"><input type="radio" name="q7" value="Satisfied"> Satisfied</label><label class="opt"><input type="radio" name="q7" value="Neutral"> Neutral</label><label class="opt"><input type="radio" name="q7" value="Dissatisfied"> Dissatisfied</label><label class="opt"><input type="radio" name="q7" value="Very Dissatisfied"> Very Dissatisfied</label></div>
 
-        <div class="organization-name">
-            {{ organization_name }}
-        </div>
+<div class="q-title">12. Teamwork: How satisfied are you with cooperation among team members? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q8" value="Very Satisfied" required> Very Satisfied</label><label class="opt"><input type="radio" name="q8" value="Satisfied"> Satisfied</label><label class="opt"><input type="radio" name="q8" value="Neutral"> Neutral</label><label class="opt"><input type="radio" name="q8" value="Dissatisfied"> Dissatisfied</label><label class="opt"><input type="radio" name="q8" value="Very Dissatisfied"> Very Dissatisfied</label></div>
 
-        <div class="organization-caption">
-            Please share your feedback about this organization.
-        </div>
+<div class="q-title">13. Recommendation: Would you recommend this organization as a good place to work? *</div>
+<div class="grid2"><label class="opt"><input type="radio" name="q9" value="Yes" required> Yes</label><label class="opt"><input type="radio" name="q9" value="No"> No</label><label class="opt"><input type="radio" name="q9" value="Maybe"> Maybe</label></div>
 
-    </section>
+<div class="sec-head">Section 3: Suggestions</div>
+<div class="q-title">14. Suggestions for Improvement: What improvements would you suggest?</div>
+<textarea name="suggestion" rows="4" placeholder="Write your suggestions to make the workplace better..."></textarea>
 
-
-    <!-- SURVEY FORM -->
-    <form action="{{ url_for('submit') }}" method="POST">
-
-        <h2 class="section-heading">
-            👤 Basic Information
-        </h2>
-
-        <div class="notice">
-            Please complete the required fields and select your feedback
-            for each question. Fields marked with
-            <span class="required">*</span> are mandatory.
-        </div>
-
-
-        <!-- Company -->
-        <div class="field">
-
-            <label class="field-label" for="company_name">
-                Company / Organization Name
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="company_name"
-                name="company_name"
-                value="{{ organization_name }}"
-                readonly
-                required>
-
-        </div>
-
-
-        <!-- Employee Name -->
-        <div class="field">
-
-            <label class="field-label" for="name">
-                Employee Name
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Enter your full name"
-                required>
-
-        </div>
-
-
-        <!-- Department -->
-        <div class="field">
-
-            <label class="field-label" for="department">
-                Department
-                <span class="required">*</span>
-            </label>
-
-            <select id="department" name="department" required>
-                <option value="">Select Department</option>
-                <option value="HR">HR</option>
-                <option value="IT">IT</option>
-                <option value="Finance">Finance</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Sales">Sales</option>
-                <option value="Operations">Operations</option>
-                <option value="Administration">Administration</option>
-            </select>
-
-        </div>
-
-
-        <!-- Experience -->
-        <div class="field">
-
-            <label class="field-label" for="experience">
-                Work Experience
-                <span class="required">*</span>
-            </label>
-
-            <select id="experience" name="experience" required>
-                <option value="">Select Experience</option>
-                <option value="Less than 1 year">Less than 1 year</option>
-                <option value="1-3 years">1–3 years</option>
-                <option value="3-5 years">3–5 years</option>
-                <option value="More than 5 years">More than 5 years</option>
-            </select>
-
-        </div>
-
-
-        <h2 class="section-heading">
-            📊 Employee Feedback
-        </h2>
-
-
-        <!-- Q1 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q1. How satisfied are you with your job?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Very Satisfied",
-                    "Satisfied",
-                    "Neutral",
-                    "Dissatisfied",
-                    "Very Dissatisfied"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="job_satisfaction"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Q2 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q2. How would you rate your work environment?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Excellent",
-                    "Good",
-                    "Average",
-                    "Poor",
-                    "Very Poor"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="work_environment"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Q3 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q3. How satisfied are you with internal communication?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Very Satisfied",
-                    "Satisfied",
-                    "Neutral",
-                    "Dissatisfied",
-                    "Very Dissatisfied"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="communication"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Q4 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q4. How well does management support employees?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Always",
-                    "Often",
-                    "Sometimes",
-                    "Rarely",
-                    "Never"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="management_support"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Q5 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q5. Are you satisfied with training opportunities?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Very Satisfied",
-                    "Satisfied",
-                    "Neutral",
-                    "Dissatisfied",
-                    "Very Dissatisfied"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="training"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Q6 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q6. Are you satisfied with career growth opportunities?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Very Satisfied",
-                    "Satisfied",
-                    "Neutral",
-                    "Dissatisfied",
-                    "Very Dissatisfied"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="career_growth"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Q7 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q7. Do you have the resources needed for your work?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Excellent",
-                    "Good",
-                    "Average",
-                    "Poor",
-                    "Very Poor"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="resources"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Q8 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q8. How would you rate teamwork in your department?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Excellent",
-                    "Good",
-                    "Average",
-                    "Poor",
-                    "Very Poor"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="teamwork"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Q9 -->
-        <div class="question">
-
-            <label class="question-title">
-                Q9. Would you recommend this organization as a workplace?
-                <span class="required">*</span>
-            </label>
-
-            <div class="options">
-
-                {% for choice in [
-                    "Definitely",
-                    "Probably",
-                    "Not Sure",
-                    "Probably Not",
-                    "Definitely Not"
-                ] %}
-
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="recommend"
-                        value="{{ choice }}"
-                        required>
-                    <span>{{ choice }}</span>
-                </label>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-        <!-- Suggestions -->
-        <div class="field">
-
-            <label class="field-label" for="suggestions">
-                Additional Suggestions or Feedback
-            </label>
-
-            <textarea
-                id="suggestions"
-                name="suggestions"
-                placeholder="Share your ideas or suggestions for improving the workplace..."></textarea>
-
-        </div>
-
-
-        <!-- Submit -->
-        <button type="submit" class="submit-btn">
-            Submit Employee Feedback
-        </button>
-
-        <a href="{{ url_for('index') }}" class="back-link">
-            ← Back to Home
-        </a>
-
-    </form>
-
-
-    <footer>
-        Employee Survey Form Analysis System
-    </footer>
-
+<button class="submit" type="submit">Submit Feedback for Ascent Solutions</button>
+</form>
 </div>
-
-</body>
-</html>
+</body></html>
