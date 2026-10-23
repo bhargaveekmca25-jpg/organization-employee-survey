@@ -1,108 +1,121 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Survey Analysis Dashboard</title><script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>Analysis - Employee Wise</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial}
-body{background:#f0f4f9}
-.header{position:sticky;top:0;z-index:10;background:linear-gradient(90deg,#0d204a,#1e4cc9 60%,#2c5de0);color:white;padding:10px 18px;display:flex;justify-content:space-between;align-items:center}
-.header h3{font-size:12px}.header p{font-size:8px;color:#a9c3ff;margin-top:2px}
-.header a{color:white;text-decoration:none;border:1px solid #6d8ef0;padding:4px 10px;border-radius:5px;font-size:10px;margin-left:6px;background:#ffffff12}
-.layout{max-width:900px;margin:0 auto;padding:12px}
-.top-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.top-card{background:white;border-radius:6px;padding:8px 10px;text-align:center;box-shadow:0 1px 4px #0001;border-top:2px solid #2b5de0}
-.top-card span{font-size:8px;color:#64748b;display:block}.top-card b{font-size:14px;color:#1a4bbd;margin-top:2px;display:block}
-.sec-label{font-size:10px;font-weight:700;color:#0f172a;margin:14px 0 8px;display:flex;align-items:center;gap:5px}
-.white-box{background:white;border-radius:6px;padding:12px;box-shadow:0 1px 4px #0001;margin-bottom:14px}
-.org-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.org-card{background:white;border-radius:6px;padding:8px 10px;box-shadow:0 1px 4px #0001;border-left:2px solid #e2e8f0;border-top:2px solid #2b5de0}
-.org-card b{font-size:9px;color:#1e293b}.org-card .small{font-size:7px;color:#94a3b8}.org-card .num{font-size:12px;color:#2563eb;font-weight:800;margin-top:4px}
-.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.q-card{background:white;border-radius:6px;padding:10px;box-shadow:0 1px 5px #0001}
-.q-card h4{font-size:9px;color:#0f172a;margin-bottom:8px}
-.break{margin-top:8px;border-top:1px solid #eef2f7;padding-top:6px}
-.break-title{font-size:8px;font-weight:700;color:#334155;margin-bottom:4px}
-.break-row{display:flex;justify-content:space-between;font-size:7px;padding:2px 0;color:#475569;border-bottom:1px dashed #f1f5f9}
-.break-row b{color:#2563eb}
-canvas{max-height:150px}
-@media(max-width:700px){.q-grid{grid-template-columns:1fr}}
+body{background:#eef2f7}
+.header{background:linear-gradient(90deg,#1e3a8a,#3b82f6);color:white;padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
+.header a{color:white;text-decoration:none;border:1px solid #93c5fd;padding:6px 12px;border-radius:6px;font-size:10px;margin-left:6px;background:#ffffff22}
+.wrap{max-width:1000px;margin:14px auto;padding:0 12px}
+.top3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.card{background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px #0001;border-top:3px solid #2563eb}
+.card b{font-size:22px;color:#1e3a8a;display:block}.card span{font-size:9px;color:#64748b}
+.box{background:white;border-radius:10px;padding:16px;box-shadow:0 2px 8px #0001;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qbox{background:#fff;border-radius:8px;padding:12px;box-shadow:0 2px 6px #0001;min-height:300px}
+.tabbar{display:flex;gap:8px;margin-bottom:12px}
+.tab{padding:8px 16px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid #cbd5e1;background:white}
+.tab.active{background:#2563eb;color:white}
+table{width:100%;border-collapse:collapse;font-size:9px}
+th{background:#1e3a8a;color:white;padding:8px;text-align:left}
+td{padding:8px;border-bottom:1px solid #eee}
+.badge{padding:2px 8px;border-radius:12px;font-size:8px;font-weight:700}
+.bg-green{background:#dcfce7;color:#166534}.bg-red{background:#fee2e2;color:#991b1b}.bg-yellow{background:#fef3c7;color:#92400e}
+.suggest{background:#fffbeb;border:1px solid #fde68a;padding:6px;border-radius:6px;font-size:9px;margin:2px 0}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}.top3{grid-template-columns:1fr}}
 </style></head>
 <body>
-<div class="header">
-<div><h3>📊 Survey Analysis Dashboard</h3><p>Employee Feedback & Organization Analysis</p></div>
-<div><a href="/admin">Admin</a><a href="/">Home</a><a href="/admin/logout">Logout</a></div>
+<div class="header"><div><b>📊 Survey Analysis</b><br><span style="font-size:8px">Employee-wise Feedback & Improvement Analysis</span></div><div><a href="/admin">Admin</a><a href="/">Home</a><a href="/logout">Logout</a></div></div>
+
+<div class="wrap">
+<div class="top3">
+<div class="card"><span>Total Survey Responses</span><b>{{ total }}</b></div>
+<div class="card"><span>Total Organizations</span><b>{{ org_count }}</b></div>
+<div class="card"><span>Employees</span><b>{{ total }}</b></div>
 </div>
 
-<div class="layout">
-<!-- Top Cards Exact like screenshot -->
-<div class="top-row">
-<div class="top-card"><span>Total Survey Responses</span><b>{{ total }}</b></div>
-<div class="top-card"><span>Total Organizations</span><b>{{ org_count }}</b></div>
+<div class="tabbar">
+<button class="tab active" onclick="showTab('ov',this)">📊 Overview</button>
+<button class="tab" onclick="showTab('emp',this)">👥 Employee-wise</button>
+<button class="tab" onclick="showTab('imp',this)">⚠️ Improvements</button>
 </div>
 
-<div class="sec-label">📊 Overall Response Distribution</div>
-<div class="white-box">
-<div style="text-align:center"><b style="font-size:10px;color:#1e40af">Overall Job Satisfaction</b><p style="font-size:7px;color:#64748b">Percentage distribution of employee satisfaction responses</p></div>
-<div style="max-width:200px;margin:10px auto"><canvas id="pieChart"></canvas></div>
+<div id="ov">
+<div class="box">
+<h4 style="font-size:12px;margin-bottom:10px">📊 Overall Job Satisfaction</h4>
+<div style="width:100%;max-width:380px;height:300px;margin:auto"><canvas id="mainChart"></canvas></div>
 </div>
-
-<div class="sec-label">🏢 Organization-wise Responses</div>
-<div class="org-row">
-{% for org,count in orgs.items() %}
-<div class="org-card"><b>{{ org }}</b><div class="small">Total Responses</div><div class="num">{{ count }}</div></div>
-{% endfor %}
+<div class="grid2">
+{% for qid, qname in q_labels.items() %}
+<div class="qbox">
+<b style="font-size:10px">{{ qname }}</b>
+<div style="height:200px"><canvas id="c_{{ qid }}"></canvas></div>
+<div style="font-size:8px;margin-top:8px;border-top:1px solid #f1f5f9;padding-top:6px">
+{% for ans,cnt in q_stats[qid].items() %}<div style="display:flex;justify-content:space-between"><span>{{ ans }}</span><span style="color:#2563eb">{{ cnt }} ({{ (cnt*100//total) if total else 0 }}%)</span></div>{% endfor %}
 </div>
-
-<div class="sec-label">📋 Question-wise Analysis</div>
-<div class="q-grid">
-{% for qid, stats in q_stats.items() %}
-{% if stats %}
-<div class="q-card">
-<h4>{{ q_labels[qid] }}</h4>
-<canvas id="chart-{{ qid }}"></canvas>
-<div class="break">
-<div class="break-title">Answer Breakdown</div>
-{% for ans,cnt in stats.items() %}
-<div class="break-row"><span>{{ ans }}</span><b>{{ cnt }} ({{ (cnt*100//total) if total else 0 }}%)</b></div>
+</div>
 {% endfor %}
 </div>
 </div>
+
+<div id="emp" style="display:none">
+<div class="box">
+<h4 style="font-size:12px">👥 Employee-wise Detailed Feedback - Sabke feedback se improvement decide hoga</h4>
+<div style="overflow:auto;margin-top:10px">
+<table>
+<tr><th>#</th><th>Employee & Dept</th><th>Experience</th><th>Summary</th><th>Suggestion</th><th>Status</th></tr>
+{% for r in responses %}
+<tr>
+<td>{{ loop.index }}</td>
+<td><b>{{ r['employee_name'] }}</b><br><span style="color:#64748b">{{ r['department'] }}</span></td>
+<td>{{ r['experience'] }}</td>
+<td><span class="badge {% if r['q1'] in ['Very Satisfied','Satisfied'] %}bg-green{% elif r['q1']=='Neutral' %}bg-yellow{% else %}bg-red{% endif %}">{{ r['q1'] }}</span> <span class="badge {% if r['q9']=='Yes' %}bg-green{% else %}bg-red{% endif %}">{{ r['q9'] }}</span></td>
+<td>{% if r['suggestion'] %}<div class="suggest">💡 {{ r['suggestion'] }}</div>{% else %}No suggestion{% endif %}</td>
+<td>{% if r['q1'] in ['Dissatisfied','Very Dissatisfied'] %}<span class="badge bg-red">At Risk</span>{% else %}<span class="badge bg-green">Happy</span>{% endif %}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+</div>
+</div>
+
+<div id="imp" style="display:none">
+<div class="box">
+<h4 style="font-size:12px">⚠️ Company Improvements Needed - Based on All Employees</h4>
+{% for qid, qname in q_labels.items() %}
+{% set bad = q_stats[qid].get('Dissatisfied',0) + q_stats[qid].get('Very Dissatisfied',0) + (0 if qid=='q9' else 0) %}
+{% if bad > 0 %}
+<div style="background:#fef2f2;border-left:3px solid #ef4444;padding:8px;border-radius:4px;margin:8px 0;font-size:10px"><b>{{ qname }}: {{ bad }} Dissatisfied</b> - {{ bad }}/{{ total }} employees need attention</div>
 {% endif %}
 {% endfor %}
+<h4 style="font-size:12px;margin-top:14px">💡 All Employee Suggestions</h4>
+{% for r in responses %}{% if r['suggestion'] %}<div class="suggest"><b>{{ r['employee_name'] }} ({{ r['department'] }}):</b> {{ r['suggestion'] }}</div>{% endif %}{% endfor %}
 </div>
+</div>
+
 </div>
 
 <script>
-// PIE - Job Satisfaction
-const pieLabels = {{ q_stats['q1'].keys()|list|tojson if q_stats['q1'] else '[]' }};
-const pieValues = {{ q_stats['q1'].values()|list|tojson if q_stats['q1'] else '[]' }};
-new Chart(document.getElementById('pieChart'), {
+function showTab(id,btn){
+ document.getElementById('ov').style.display=id=='ov'?'block':'none';
+ document.getElementById('emp').style.display=id=='emp'?'block':'none';
+ document.getElementById('imp').style.display=id=='imp'?'block':'none';
+ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active');
+}
+window.onload=function(){
+ new Chart(document.getElementById('mainChart'),{
+  type:'doughnut',
+  data:{labels:{{ q_stats['q1'].keys()|list|tojson }}, datasets:[{data:{{ q_stats['q1'].values()|list|tojson }}, backgroundColor:['#16a34a','#22c55e','#eab308','#f97316','#dc2626']}]},
+  options:{responsive:true,maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{font:{size:9}}}}}}
+ });
+ {% for qid in q_labels.keys() %}
+ new Chart(document.getElementById('c_{{ qid }}'),{
   type:'pie',
-  data:{
-    labels:pieLabels,
-    datasets:[{data:pieValues, backgroundColor:['#22c55e','#84cc16','#3b82f6','#f59e0b','#ef4444','#06b6d4','#a855f7']}]
-  },
-  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:7}}}} , datalabels:{display:true}}}
-});
-
-// BAR CHARTS for each question
-{% for qid, stats in q_stats.items() %}
-{% if stats %}
-new Chart(document.getElementById('chart-{{ qid }}'), {
-  type:'bar',
-  data:{
-    labels:{{ stats.keys()|list|tojson }},
-    datasets:[{label:'Count', data:{{ stats.values()|list|tojson }}, backgroundColor:'#2563eb', borderRadius:3, barThickness:18}]
-  },
-  options:{
-    responsive:true,
-    plugins:{legend:{display:false}},
-    scales:{
-      y:{beginAtZero:true,ticks:{font:{size:7},stepSize:1}},
-      x:{ticks:{font:{size:6}, maxRotation:30}}
-    }
-  }
-});
-{% endif %}
-{% endfor %}
+  data:{labels:{{ q_stats[qid].keys()|list|tojson }}, datasets:[{data:{{ q_stats[qid].values()|list|tojson }}, backgroundColor:['#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4']}]},
+  options:{responsive:true,maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{font:{size:8}}}}}}
+ );
+ {% endfor %}
+}
 </script>
 </body></html>
